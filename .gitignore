@@ -12,3 +12,6 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+gen-ms-dev-plugin.iml
+gen-ms-dev-plugin.ipr
+gen-ms-dev-plugin.iws
