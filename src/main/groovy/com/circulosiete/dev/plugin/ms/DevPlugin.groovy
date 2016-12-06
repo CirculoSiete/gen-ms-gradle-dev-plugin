@@ -85,7 +85,7 @@ build.dependsOn prepareApp
       args 'server', 'src/main/resources/config.yaml'
     }
 
-    project.task([type: Copy], 'prepareApp') {
+    project.task([type: org.gradle.api.tasks.Copy], 'prepareApp') {
       from 'build/libs/service.jar'
       into '../microservicios/App'
     }
