@@ -72,7 +72,6 @@ clean.doFirst {
   delete "../microservicios/FormularioFrecuente/service.jar"
 }
 
-prepareApp.dependsOn shadowJar
 build.dependsOn prepareApp
      */
     project.tasks.getByName('jar').configure {
@@ -85,7 +84,7 @@ build.dependsOn prepareApp
       args 'server', 'src/main/resources/config.yaml'
     }
 
-    project.task([type: org.gradle.api.tasks.Copy], 'prepareApp') {
+    project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'shadowJar'], 'prepareApp') {
       from 'build/libs/service.jar'
       into '../microservicios/App'
     }
