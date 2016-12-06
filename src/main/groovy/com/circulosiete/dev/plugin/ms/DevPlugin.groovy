@@ -72,12 +72,6 @@ clean.doFirst {
   delete "../microservicios/FormularioFrecuente/service.jar"
 }
 
-//Copiamos el archivo empacado al directorio de Dockerfile
-task prepareApp(type: Copy) {
-  from 'build/libs/service.jar'
-  into '../microservicios/FormularioFrecuente'
-}
-
 prepareApp.dependsOn shadowJar
 build.dependsOn prepareApp
      */
@@ -89,6 +83,11 @@ build.dependsOn prepareApp
 
     project.tasks.getByName('run').configure {
       args 'server', 'src/main/resources/config.yaml'
+    }
+
+    project.task([type: Copy], 'prepareApp') {
+      from 'build/libs/service.jar'
+      into '../microservicios/App'
     }
 
 
