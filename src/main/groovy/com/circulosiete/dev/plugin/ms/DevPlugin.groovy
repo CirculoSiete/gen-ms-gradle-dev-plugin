@@ -89,6 +89,8 @@ build.dependsOn prepareApp
       into '../microservicios/App'
     }
 
+    project.tasks.getByName('build').dependsOn('shadowJar')
+
 
   }
 
