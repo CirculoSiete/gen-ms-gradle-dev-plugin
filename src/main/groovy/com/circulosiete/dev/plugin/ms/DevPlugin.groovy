@@ -75,7 +75,7 @@ class DevPlugin implements Plugin<Project> {
       version = null
     }
 
-    project.tasks.getByName('docker').configure {
+    /*project.tasks.getByName('docker').configure {
 
       // Set Docker host URL based on existence of environment
       // variable DOCKER_HOST.
@@ -89,7 +89,7 @@ class DevPlugin implements Plugin<Project> {
         username = project.hasProperty('drSunatUsername') ? drSunatUsername : ''
         password = project.hasProperty('drSunatPassword') ? drSunatPassword : ''
       }
-    }
+    }*/
 
     def jarManifestAttributes = [
       'Built-By'              : "Domingo Suarez Torres @ CirculoSiete.com (${System.properties['user.name']})",
