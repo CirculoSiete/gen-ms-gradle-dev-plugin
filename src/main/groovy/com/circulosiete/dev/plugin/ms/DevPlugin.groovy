@@ -110,10 +110,10 @@ class DevPlugin implements Plugin<Project> {
       args 'server', 'src/main/resources/config.yaml'
     }
 
-    project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'shadowJar'], 'prepareApp') {
+    /*project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'shadowJar'], 'prepareApp') {
       from 'build/libs/service.jar'
       into '../microservicios/App'
-    }
+    }*/
 
     project.tasks.getByName('build').dependsOn('shadowJar')
 
@@ -126,8 +126,8 @@ class DevPlugin implements Plugin<Project> {
         dockerJar = project.file("build/libs/${project.jar.archiveName}")
       }
 
-      into project.ext.dockerBuildDir
       from "build/libs/${project.jar.archiveName}"
+      into project.ext.dockerBuildDir
     }
 
     project.task([type: com.bmuschko.gradle.docker.tasks.image.Dockerfile, dependsOn: 'dockerRepackage'], 'createDockerfile') {
