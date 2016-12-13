@@ -131,7 +131,7 @@ build.dependsOn prepareApp
     project.tasks.getByName('build').dependsOn('shadowJar')
 
 
-    project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'bootRepackage'], 'dockerRepackage') {
+    project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'shadowJar'], 'dockerRepackage') {
       description = 'Repackage application JAR to make it runnable.'
       group = project.ext.dockerBuildGroup
 
