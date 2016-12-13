@@ -133,21 +133,21 @@ build.dependsOn prepareApp
 
     project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'bootRepackage'], 'dockerRepackage') {
       description = 'Repackage application JAR to make it runnable.'
-      group = dockerBuildGroup
+      group = project.ext.dockerBuildGroup
 
-      ext {
-        dockerJar = file("build/libs/${jar.archiveName}")
+      project.ext {
+        dockerJar = project.file("build/libs/${project.jar.archiveName}")
       }
 
-      into dockerBuildDir
-      from "build/libs/${jar.archiveName}"
+      into project.ext.dockerBuildDir
+      from "build/libs/${project.jar.archiveName}"
     }
 
     project.task([type: com.bmuschko.gradle.docker.tasks.image.Dockerfile, dependsOn: 'dockerRepackage'], 'createDockerfile') {
       description = 'Create Dockerfile to build image.'
-      group = dockerBuildGroup
+      group = project.ext.dockerBuildGroup
 
-      destFile = file("${dockerBuildDir}/Dockerfile")
+      destFile = project.file("${project.ext.dockerBuildDir}/Dockerfile")
 
       from 'openjdk:8-jre-alpine'
       maintainer 'Domingo Suarez Torres <domingo.suarez@gmail.com>'
