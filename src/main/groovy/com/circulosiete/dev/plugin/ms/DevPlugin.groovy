@@ -142,12 +142,12 @@ class DevPlugin implements Plugin<Project> {
       exposePort 8080
 
       try {
-        project.tasks.getByName('dockerRepackage').dockerJar.name
+        println "DockerJar.name: $project.ext.dockerJar.name"
       } catch (Throwable t) {
         println "No se pudo: ${t.message}"
       }
 
-      //copyFile dockerRepackage.dockerJar.name, '/app/application.jar'
+      copyFile project.ext.dockerJar.name, '/app/application.jar'
 
       entryPoint 'java', '-jar', '/app/application.jar'
 
