@@ -45,7 +45,7 @@ class DevPlugin implements Plugin<Project> {
     }
 
     if (!project.ext.has('dockerTag')) {
-      project.ext.dockerTag = project.dockerTag
+      project.ext.dockerTag = "vhub.cosapidata.com.pe/gdg-lima-talk:${project.version}".toLowerCase()
     }
 
     if (!project.ext.has('dockerBuildDirString')) {
@@ -53,7 +53,7 @@ class DevPlugin implements Plugin<Project> {
     }
 
     if (!project.ext.has('dockerBuildDir')) {
-      project.ext.dockerBuildDir = project.mkdir(project.extdockerBuildDirString)
+      project.ext.dockerBuildDir = project.mkdir(project.ext.dockerBuildDirString)
     }
 
     if (!project.ext.has('dockerBuildGroup')) {
