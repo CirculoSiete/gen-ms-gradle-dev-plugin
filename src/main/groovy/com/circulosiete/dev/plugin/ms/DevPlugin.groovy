@@ -154,7 +154,7 @@ build.dependsOn prepareApp
 
       exposePort 8080
 
-      copyFile dockerRepackage.dockerJar.name, '/app/application.jar'
+      //copyFile dockerRepackage.dockerJar.name, '/app/application.jar'
 
       entryPoint 'java', '-jar', '/app/application.jar'
 
