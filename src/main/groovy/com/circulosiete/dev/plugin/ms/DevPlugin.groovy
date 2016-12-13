@@ -49,7 +49,7 @@ class DevPlugin implements Plugin<Project> {
     }
 
     if (!project.ext.has('dockerBuildDirString')) {
-      project.ext.dockerBuildDirString = "${buildDir}/docker"
+      project.ext.dockerBuildDirString = "${project.buildDir}/docker"
     }
 
     if (!project.ext.has('dockerBuildDir')) {
