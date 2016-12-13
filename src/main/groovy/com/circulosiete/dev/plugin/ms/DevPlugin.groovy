@@ -99,20 +99,7 @@ class DevPlugin implements Plugin<Project> {
       'Implementation-Version': project.ext.theVersion,
       'Main-Class'            : '______project.ext.mainClassName',
     ]
-/*
-    task myRun(type: JavaExec) {
-  classpath sourceSets.main.runtimeClasspath
-  main = mainClassName
-  args 'server', 'src/main/resources/config.yaml'
-}
 
-//Borramos el archivo empacado
-clean.doFirst {
-  delete "../microservicios/FormularioFrecuente/service.jar"
-}
-
-build.dependsOn prepareApp
-     */
     project.tasks.getByName('jar').configure {
       manifest {
         attributes(jarManifestAttributes)
@@ -153,6 +140,12 @@ build.dependsOn prepareApp
       maintainer 'Domingo Suarez Torres <domingo.suarez@gmail.com>'
 
       exposePort 8080
+
+      try {
+        project.tasks.getByName('dockerRepackage').dockerJar.name
+      } catch (Throwable t) {
+        println "No se pudo: ${t.message}"
+      }
 
       //copyFile dockerRepackage.dockerJar.name, '/app/application.jar'
 
