@@ -16,8 +16,11 @@
  */
 package com.circulosiete.dev.plugin.ms
 
+import static com.bmuschko.gradle.docker.DockerRemoteApiPlugin.DOCKER_JAVA_CONFIGURATION_NAME
+
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 
 import java.text.SimpleDateFormat
 
@@ -41,6 +44,27 @@ class DevPlugin implements Plugin<Project> {
       project.ext.theVersion = project.version
     }
 
+    if (!project.ext.has('dockerTag')) {
+      project.ext.dockerTag = project.dockerTag
+    }
+
+    if (!project.ext.has('dockerBuildDirString')) {
+      project.ext.dockerBuildDirString = "${buildDir}/docker"
+    }
+
+    if (!project.ext.has('dockerBuildDir')) {
+      project.ext.dockerBuildDir = project.mkdir(project.extdockerBuildDirString)
+    }
+
+    if (!project.ext.has('dockerBuildGroup')) {
+      project.ext.dockerBuildGroup = 'Docker'
+    }
+
+    Configuration config = project.configurations[DOCKER_JAVA_CONFIGURATION_NAME]
+    config.resolutionStrategy {
+      force 'de.gesellix:unix-socket-factory:2016-04-06T22-21-19'
+    }
+
     project.tasks.getByName('shadowJar').configure {
       mergeServiceFiles()
       exclude 'META-INF/*.DSA'
@@ -51,6 +75,21 @@ class DevPlugin implements Plugin<Project> {
       version = null
     }
 
+    project.tasks.getByName('docker').configure {
+
+      // Set Docker host URL based on existence of environment
+      // variable DOCKER_HOST.
+      url = System.env.DOCKER_HOST ?
+        System.env.DOCKER_HOST.replace("tcp", "https") :
+        'unix:///var/run/docker.sock'
+
+      registryCredentials {
+        url = project.hasProperty('drSunatUrl') ? drSunatUrl : ''
+
+        username = project.hasProperty('drSunatUsername') ? drSunatUsername : ''
+        password = project.hasProperty('drSunatPassword') ? drSunatPassword : ''
+      }
+    }
 
     def jarManifestAttributes = [
       'Built-By'              : "Domingo Suarez Torres @ CirculoSiete.com (${System.properties['user.name']})",
@@ -92,14 +131,45 @@ build.dependsOn prepareApp
     project.tasks.getByName('build').dependsOn('shadowJar')
 
 
+    project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'bootRepackage'], 'dockerRepackage') {
+      description = 'Repackage application JAR to make it runnable.'
+      group = dockerBuildGroup
+
+      ext {
+        dockerJar = file("build/libs/${jar.archiveName}")
+      }
+
+      into dockerBuildDir
+      from "build/libs/${jar.archiveName}"
+    }
+
+    project.task([type: com.bmuschko.gradle.docker.tasks.image.Dockerfile, dependsOn: 'dockerRepackage'], 'createDockerfile') {
+      description = 'Create Dockerfile to build image.'
+      group = dockerBuildGroup
+
+      destFile = file("${dockerBuildDir}/Dockerfile")
+
+      from 'openjdk:8-jre-alpine'
+      maintainer 'Domingo Suarez Torres <domingo.suarez@gmail.com>'
+
+      exposePort 8080
+
+      copyFile dockerRepackage.dockerJar.name, '/app/application.jar'
+
+      entryPoint 'java', '-jar', '/app/application.jar'
+
+    }
+
   }
+
 
   Closure checkRequiredPlugins = {
     def checkPlugin = checkPluginName.curry(plugins)
     //println '\n==> checking required plugins'
     [
       'java', 'eclipse', 'idea', 'application',
-      'com.github.johnrengelman.shadow', 'maven'
+      'com.github.johnrengelman.shadow', 'maven',
+      'com.bmuschko.docker-remote-api'
     ].each {
       checkPlugin it
     }
