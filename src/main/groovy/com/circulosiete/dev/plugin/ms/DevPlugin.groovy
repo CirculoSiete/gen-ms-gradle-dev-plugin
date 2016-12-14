@@ -18,12 +18,11 @@ package com.circulosiete.dev.plugin.ms
 
 import static com.bmuschko.gradle.docker.DockerRemoteApiPlugin.DOCKER_JAVA_CONFIGURATION_NAME
 
-import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPluginConvention
-import org.gradle.internal.impldep.org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.Yaml
 
 import java.text.SimpleDateFormat
 
@@ -62,7 +61,7 @@ class DevPlugin implements Plugin<Project> {
       }
 
       def tagData = []
-      if(project.ext.drHub) {
+      if (project.ext.drHub) {
         tagData << project.ext.drHub
         tagData << '/'
       }
@@ -70,7 +69,7 @@ class DevPlugin implements Plugin<Project> {
       if (!project.ext.has('drHubProject')) {
         project.ext.drHubProject = 'microservices'
       }
-      if(project.ext.drHubProject) {
+      if (project.ext.drHubProject) {
         tagData << project.ext.drHubProject
         tagData << '/'
       }
