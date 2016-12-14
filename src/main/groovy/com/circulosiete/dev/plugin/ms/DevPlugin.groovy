@@ -209,8 +209,8 @@ class DevPlugin implements Plugin<Project> {
     String appPort = load.server.applicationConnectors[0].port
     String adminPort = load.server.adminConnectors[0].port
 
-    project.ext.appPort = appPort
-    project.ext.adminPort = adminPort
+    project.ext.appPort = new Integer(appPort)
+    project.ext.adminPort = new Integer(adminPort)
     println project.ext.appPort
     println project.ext.appPort.getClass().name
     println project.ext.adminPort
