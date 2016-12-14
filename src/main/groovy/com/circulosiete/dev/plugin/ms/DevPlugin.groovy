@@ -108,13 +108,7 @@ class DevPlugin implements Plugin<Project> {
       args 'server', 'src/main/resources/config.yaml'
     }
 
-    /*project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'shadowJar'], 'prepareApp') {
-      from 'build/libs/service.jar'
-      into '../microservicios/App'
-    }*/
-
     project.tasks.getByName('build').dependsOn('shadowJar')
-
 
     project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'build'], 'dockerRepackage') {
       description = 'Repackage application JAR to make it runnable.'
@@ -134,18 +128,20 @@ class DevPlugin implements Plugin<Project> {
 
       destFile = project.file("${project.ext.dockerBuildDir}/Dockerfile")
 
-      from 'openjdk:8-jre-alpine'
-      maintainer 'Domingo Suarez Torres <domingo.suarez@gmail.com>'
+      if (!project.ext.has('drFromImage')) {
+        project.ext.drFromImage = 'openjdk:8-jre-alpine'
+      }
+
+      if (!project.ext.has('drMantainer')) {
+        project.ext.drMantainer = 'Domingo Suarez Torres <domingo.suarez@gmail.com>'
+      }
+
+      from project.ext.drFromImage
+      maintainer project.ext.drMantainer
 
       exposePort 8080
 
-      try {
-        println "DockerJar.name: $project.ext.dockerJar.name"
-      } catch (Throwable t) {
-        println "No se pudo: ${t.message}"
-      }
-
-      copyFile project.ext.dockerJar.name, '/app/application.jar'
+      copyFile project.ext.finalJarFilename, '/app/application.jar'
 
       entryPoint 'java', '-jar', '/app/application.jar'
 
