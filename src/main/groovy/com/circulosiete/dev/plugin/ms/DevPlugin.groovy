@@ -175,7 +175,7 @@ class DevPlugin implements Plugin<Project> {
 
       copyFile project.ext.finalJarFilename, '/app/application.jar'
 
-      volumen '/config'
+      volume '/config'
 
       entryPoint 'java', '-jar', '/app/application.jar', 'server', '/config/config.yaml'
 
