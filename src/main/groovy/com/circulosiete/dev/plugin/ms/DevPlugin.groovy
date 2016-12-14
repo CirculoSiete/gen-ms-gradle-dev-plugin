@@ -18,9 +18,11 @@ package com.circulosiete.dev.plugin.ms
 
 import static com.bmuschko.gradle.docker.DockerRemoteApiPlugin.DOCKER_JAVA_CONFIGURATION_NAME
 
+import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.plugins.JavaPluginConvention
 
 import java.text.SimpleDateFormat
 
@@ -29,6 +31,12 @@ class DevPlugin implements Plugin<Project> {
   @Override
   void apply(Project project) {
     project.allprojects checkRequiredPlugins
+
+    JavaPluginConvention javaPluginConvention = (
+      JavaPluginConvention) project.convention.plugins.java
+
+    javaPluginConvention.sourceCompatibility = 1.8
+    javaPluginConvention.targetCompatibility = 1.8
 
     Date buildTimeAndDate = new Date()
 
