@@ -77,20 +77,16 @@ class DevPlugin implements Plugin<Project> {
 
     //project.extensions.getByName()
 
-    project.extensions.getByName('docker').configure {
+    def dockerExtension = project.extensions.getByName('docker')
+    dockerExtension.url = System.env.DOCKER_HOST ?
+      System.env.DOCKER_HOST.replace("tcp", "https") :
+      'unix:///var/run/docker.sock'
 
-      // Set Docker host URL based on existence of environment
-      // variable DOCKER_HOST.
-      url = System.env.DOCKER_HOST ?
-        System.env.DOCKER_HOST.replace("tcp", "https") :
-        'unix:///var/run/docker.sock'
+    dockerExtension.registryCredentials {
+      url = project.hasProperty('drSunatUrl') ? drSunatUrl : ''
 
-      registryCredentials {
-        url = project.hasProperty('drSunatUrl') ? drSunatUrl : ''
-
-        username = project.hasProperty('drSunatUsername') ? drSunatUsername : ''
-        password = project.hasProperty('drSunatPassword') ? drSunatPassword : ''
-      }
+      username = project.hasProperty('drSunatUsername') ? drSunatUsername : ''
+      password = project.hasProperty('drSunatPassword') ? drSunatPassword : ''
     }
 
     def jarManifestAttributes = [
