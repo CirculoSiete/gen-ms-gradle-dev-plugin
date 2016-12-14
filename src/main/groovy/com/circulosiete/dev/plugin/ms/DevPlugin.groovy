@@ -73,8 +73,9 @@ class DevPlugin implements Plugin<Project> {
 
       project.ext.dockerTag = "${tagData.join('')}${project.name}:${project.version}".toLowerCase()
 
-      println "Docker Tag ${project.ext.dockerTag}"
     }
+
+    println "Docker Tag ${project.ext.dockerTag}"
 
     if (!project.ext.has('dockerBuildDirString')) {
       project.ext.dockerBuildDirString = "${project.buildDir}/docker"
