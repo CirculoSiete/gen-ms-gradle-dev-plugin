@@ -114,10 +114,10 @@ class DevPlugin implements Plugin<Project> {
       'unix:///var/run/docker.sock'
 
     dockerExtension.registryCredentials {
-      url = project.hasProperty('drSunatUrl') ? drSunatUrl : ''
+      url = project.hasProperty('drSunatUrl') ? project.property('drSunatUrl') : ''
 
-      username = project.hasProperty('drSunatUsername') ? drSunatUsername : ''
-      password = project.hasProperty('drSunatPassword') ? drSunatPassword : ''
+      username = project.hasProperty('drSunatUsername') ? project.property('drSunatUsername') : ''
+      password = project.hasProperty('drSunatPassword') ? project.property('drSunatPassword') : ''
     }
 
     def jarManifestAttributes = [
