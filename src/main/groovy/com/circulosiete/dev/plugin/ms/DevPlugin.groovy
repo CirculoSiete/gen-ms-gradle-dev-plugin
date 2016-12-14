@@ -142,6 +142,8 @@ class DevPlugin implements Plugin<Project> {
 
     project.tasks.getByName('build').dependsOn('shadowJar')
 
+    portApp(project)
+
     project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'build'], 'dockerRepackage') {
       description = 'Repackage application JAR to make it runnable.'
       group = project.ext.dockerBuildGroup
@@ -171,7 +173,7 @@ class DevPlugin implements Plugin<Project> {
       from project.ext.drFromImage
       maintainer project.ext.drMantainer
 
-      exposePort 8080
+      exposePort project.ext.appPort, project.ext.adminPort
 
       copyFile project.ext.finalJarFilename, '/app/application.jar'
 
@@ -179,7 +181,6 @@ class DevPlugin implements Plugin<Project> {
 
     }
 
-    portApp()
 
   }
 
@@ -202,10 +203,14 @@ class DevPlugin implements Plugin<Project> {
     }
   }
 
-  String portApp() {
+  void portApp(Project project) {
     Yaml yaml = new Yaml()
     Object load = yaml.load(new File(DEFAULT_CONFIG_FILE).text)
-    println load.dump()
+    String appPort = load.server.applicationConnectors.port
+    String adminPort = load.server.adminConnectors.port
+
+    project.ext.appPort = appPort
+    project.ext.adminPort = adminPort
   }
 
 }
