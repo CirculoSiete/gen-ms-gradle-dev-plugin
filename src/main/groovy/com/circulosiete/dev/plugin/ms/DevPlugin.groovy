@@ -136,9 +136,7 @@ class DevPlugin implements Plugin<Project> {
         project.ext.drMantainer = 'Domingo Suarez Torres <domingo.suarez@gmail.com>'
       }
 
-
       from project.ext.drFromImage
-      instruction "# Se usara ${project.ext.dockerTag}"
       maintainer project.ext.drMantainer
 
       exposePort 8080
