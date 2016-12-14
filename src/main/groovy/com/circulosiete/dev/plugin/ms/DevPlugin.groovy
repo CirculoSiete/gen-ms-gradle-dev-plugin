@@ -108,8 +108,6 @@ class DevPlugin implements Plugin<Project> {
       project.ext.finalJarFilename = 'service.jar'
     }
 
-    //project.extensions.getByName()
-
     def dockerExtension = project.extensions.getByName('docker')
     dockerExtension.url = System.env.DOCKER_HOST ?
       System.env.DOCKER_HOST.replace("tcp", "https") :
@@ -176,6 +174,8 @@ class DevPlugin implements Plugin<Project> {
       exposePort project.ext.appPort, project.ext.adminPort
 
       copyFile project.ext.finalJarFilename, '/app/application.jar'
+
+      volumen '/config'
 
       entryPoint 'java', '-jar', '/app/application.jar', 'server', '/config/config.yaml'
 
