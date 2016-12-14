@@ -204,7 +204,7 @@ class DevPlugin implements Plugin<Project> {
 
   String portApp() {
     Yaml yaml = new Yaml()
-    Object load = yaml.load(DEFAULT_CONFIG_FILE)
+    Object load = yaml.load(new File(DEFAULT_CONFIG_FILE).text)
     println load.dump()
   }
 
