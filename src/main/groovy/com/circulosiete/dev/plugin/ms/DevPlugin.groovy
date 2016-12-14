@@ -135,9 +135,10 @@ class DevPlugin implements Plugin<Project> {
       if (!project.ext.has('drMantainer')) {
         project.ext.drMantainer = 'Domingo Suarez Torres <domingo.suarez@gmail.com>'
       }
-      instruction "# Se usara ${project.ext.dockerTag}"
+
 
       from project.ext.drFromImage
+      instruction "# Se usara ${project.ext.dockerTag}"
       maintainer project.ext.drMantainer
 
       exposePort 8080
