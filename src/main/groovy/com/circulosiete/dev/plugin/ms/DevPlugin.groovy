@@ -206,8 +206,8 @@ class DevPlugin implements Plugin<Project> {
   void portApp(Project project) {
     Yaml yaml = new Yaml()
     Object load = yaml.load(new File(DEFAULT_CONFIG_FILE).text)
-    String appPort = load.server.applicationConnectors.port
-    String adminPort = load.server.adminConnectors.port
+    String appPort = load.server.applicationConnectors[0].port
+    String adminPort = load.server.adminConnectors[0].port
 
     project.ext.appPort = appPort
     project.ext.adminPort = adminPort
