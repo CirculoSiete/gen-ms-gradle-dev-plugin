@@ -135,6 +135,7 @@ class DevPlugin implements Plugin<Project> {
       if (!project.ext.has('drMantainer')) {
         project.ext.drMantainer = 'Domingo Suarez Torres <domingo.suarez@gmail.com>'
       }
+      instruction "# Se usara ${project.ext.dockerTag}"
 
       from project.ext.drFromImage
       maintainer project.ext.drMantainer
