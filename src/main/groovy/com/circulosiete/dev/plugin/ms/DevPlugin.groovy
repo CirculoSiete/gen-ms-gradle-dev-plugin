@@ -53,7 +53,27 @@ class DevPlugin implements Plugin<Project> {
     }
 
     if (!project.ext.has('dockerTag')) {
-      project.ext.dockerTag = "vhub.cosapidata.com.pe/gdg-lima-talk:${project.version}".toLowerCase()
+      if (!project.ext.has('drHub')) {
+        project.ext.drHub = 'vhub.cosapidata.com.pe'
+      }
+
+      def tagData = []
+      if(project.ext.drHub) {
+        tagData << project.ext.drHub
+        tagData << '/'
+      }
+
+      if (!project.ext.has('drHubProject')) {
+        project.ext.drHubProject = 'microservices'
+      }
+      if(project.ext.drHubProject) {
+        tagData << project.ext.drHubProject
+        tagData << '/'
+      }
+
+      project.ext.dockerTag = "${tagData.join('')}${project.name}:${project.version}".toLowerCase()
+
+      println "Docker Tag ${project.ext.dockerTag}"
     }
 
     if (!project.ext.has('dockerBuildDirString')) {
