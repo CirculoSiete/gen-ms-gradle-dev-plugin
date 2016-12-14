@@ -181,9 +181,19 @@ class DevPlugin implements Plugin<Project> {
 
     }
 
+    project.task([type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage, dependsOn: 'createDockerfile'], 'buildImage') {
+      description = 'Create Docker image with application.'
+      group = project.ext.dockerBuildGroup
+
+      inputDir = project.file(project.ext.dockerBuildDir)
+      tag = project.ext.dockerTag
+    }
+
+    project.task([type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage, dependsOn: 'buildImage'], 'pushImage') {
+      conventionMapping.imageName = { project.ext.dockerTag }
+    }
 
   }
-
 
   Closure checkRequiredPlugins = {
     def checkPlugin = checkPluginName.curry(plugins)
