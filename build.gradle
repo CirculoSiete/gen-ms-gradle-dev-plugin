@@ -42,6 +42,7 @@ dependencies {
   compile localGroovy()
   compile 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
   compile 'com.bmuschko:gradle-docker-plugin:3.0.3'
+  compile 'org.yaml:snakeyaml:1.15'
 }
 
 Date buildTimeAndDate = new Date()

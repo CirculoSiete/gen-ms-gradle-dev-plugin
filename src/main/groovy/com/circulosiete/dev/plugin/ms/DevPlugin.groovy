@@ -23,10 +23,14 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.internal.impldep.org.yaml.snakeyaml.Yaml
 
 import java.text.SimpleDateFormat
 
 class DevPlugin implements Plugin<Project> {
+
+
+  public static final String DEFAULT_CONFIG_FILE = 'src/main/resources/config.yaml'
 
   @Override
   void apply(Project project) {
@@ -75,7 +79,7 @@ class DevPlugin implements Plugin<Project> {
 
     }
 
-    println "Docker Tag ${project.ext.dockerTag}"
+    println "Docker Tag '${project.ext.dockerTag}'"
 
     if (!project.ext.has('dockerBuildDirString')) {
       project.ext.dockerBuildDirString = "${project.buildDir}/docker"
@@ -134,7 +138,7 @@ class DevPlugin implements Plugin<Project> {
     }
 
     project.tasks.getByName('run').configure {
-      args 'server', 'src/main/resources/config.yaml'
+      args 'server', DEFAULT_CONFIG_FILE
     }
 
     project.tasks.getByName('build').dependsOn('shadowJar')
@@ -162,7 +166,7 @@ class DevPlugin implements Plugin<Project> {
       }
 
       if (!project.ext.has('drMantainer')) {
-        project.ext.drMantainer = 'Domingo Suarez Torres <domingo.suarez@gmail.com>'
+        project.ext.drMantainer = 'Domingo Suarez Torres <domingo@circulosiete.com>'
       }
 
       from project.ext.drFromImage
@@ -172,16 +176,17 @@ class DevPlugin implements Plugin<Project> {
 
       copyFile project.ext.finalJarFilename, '/app/application.jar'
 
-      entryPoint 'java', '-jar', '/app/application.jar'
+      entryPoint 'java', '-jar', '/app/application.jar', 'server', '/config/config.yaml'
 
     }
+
+    portApp()
 
   }
 
 
   Closure checkRequiredPlugins = {
     def checkPlugin = checkPluginName.curry(plugins)
-    //println '\n==> checking required plugins'
     [
       'java', 'eclipse', 'idea', 'application',
       'com.github.johnrengelman.shadow', 'maven',
@@ -193,9 +198,15 @@ class DevPlugin implements Plugin<Project> {
 
   Closure checkPluginName = { plugins, pluginName ->
     if (!plugins.hasPlugin(pluginName)) {
-      println "Adding plugin: $pluginName"
+      println "Applying plugin: $pluginName"
       plugins.apply(pluginName)
     }
+  }
+
+  String portApp() {
+    Yaml yaml = new Yaml()
+    Object load = yaml.load(DEFAULT_CONFIG_FILE)
+    println load.dump()
   }
 
 }
