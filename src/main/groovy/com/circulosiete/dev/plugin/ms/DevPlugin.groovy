@@ -221,10 +221,6 @@ class DevPlugin implements Plugin<Project> {
 
     project.ext.appPort = new Integer(appPort)
     project.ext.adminPort = new Integer(adminPort)
-    println project.ext.appPort
-    println project.ext.appPort.getClass().name
-    println project.ext.adminPort
-    println project.ext.adminPort.getClass().name
   }
 
 }
