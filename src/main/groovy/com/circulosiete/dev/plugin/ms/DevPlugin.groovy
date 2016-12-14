@@ -73,6 +73,7 @@ class DevPlugin implements Plugin<Project> {
       baseName = 'service'
       classifier = null
       version = null
+      project.ext.finalJarFilename = 'service.jar'
     }
 
     //project.extensions.getByName()
@@ -94,8 +95,7 @@ class DevPlugin implements Plugin<Project> {
       'Created-By'            : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.getProperty('java.vm.version')})",
       'Build-Date'            : project.ext.buildDate,
       'Build-Time'            : project.ext.buildTime,
-      'Implementation-Version': project.ext.theVersion,
-      'Main-Class'            : '______project.ext.mainClassName',
+      'Implementation-Version': project.ext.theVersion
     ]
 
     project.tasks.getByName('jar').configure {
@@ -124,7 +124,7 @@ class DevPlugin implements Plugin<Project> {
         dockerJar = project.file("build/libs/${project.jar.archiveName}")
       }
 
-      from "build/libs/${project.jar.archiveName}"
+      from "build/libs/${project.ext.finalJarFilename}"
       into project.ext.dockerBuildDir
     }
 
