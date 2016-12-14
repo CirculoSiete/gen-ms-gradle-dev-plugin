@@ -109,7 +109,7 @@ class DevPlugin implements Plugin<Project> {
     }
 
     def dockerExtension = project.extensions.getByName('docker')
-    dockerExtension.url = getDefaultDockerUrl()
+    dockerExtension.url = getDefaultDockerUrl(project)
 
     dockerExtension.registryCredentials {
       url = project.hasProperty('drSunatUrl') ? project.property('drSunatUrl') : ''
@@ -222,7 +222,7 @@ class DevPlugin implements Plugin<Project> {
   }
 
 
-  String getDefaultDockerUrl() {
+  String getDefaultDockerUrl(Project project) {
     String dockerUrl = System.getenv("DOCKER_HOST")
     if (!dockerUrl) {
       boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win")
