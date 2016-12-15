@@ -212,13 +212,18 @@ class DevPlugin implements Plugin<Project> {
   }
 
   void portApp(Project project) {
-    Yaml yaml = new Yaml()
-    Object load = yaml.load(new File(DEFAULT_CONFIG_FILE).text)
-    String appPort = load.server.applicationConnectors[0].port
-    String adminPort = load.server.adminConnectors[0].port
+    try {
+      Yaml yaml = new Yaml()
+      Object load = yaml.load(new File(DEFAULT_CONFIG_FILE).text)
+      String appPort = load.server.applicationConnectors[0].port
+      String adminPort = load.server.adminConnectors[0].port
 
-    project.ext.appPort = new Integer(appPort)
-    project.ext.adminPort = new Integer(adminPort)
+      project.ext.appPort = new Integer(appPort)
+      project.ext.adminPort = new Integer(adminPort)
+    } catch (Throwable t) {
+      System.err.println(t.message)
+    }
+
   }
 
 
