@@ -28,7 +28,6 @@ import java.text.SimpleDateFormat
 
 class DevPlugin implements Plugin<Project> {
 
-
   public static final String DEFAULT_CONFIG_FILE = 'src/main/resources/config.yaml'
 
   @Override
@@ -215,19 +214,15 @@ class DevPlugin implements Plugin<Project> {
     try {
       Yaml yaml = new Yaml()
       Object load = yaml.load(new File(DEFAULT_CONFIG_FILE).text)
-      String appPort = load.server.applicationConnectors[0].port
-      String adminPort = load.server.adminConnectors[0].port
 
-      project.ext.appPort = new Integer(appPort)
-      project.ext.adminPort = new Integer(adminPort)
+      project.ext.appPort = new Integer(load.server.applicationConnectors[0].port)
+      project.ext.adminPort = new Integer(load.server.adminConnectors[0].port)
     } catch (Throwable t) {
-      System.err.println(t.message)
+      project.logger.error(t.message)
       project.ext.appPort = 0
       project.ext.adminPort = 0
     }
-
   }
-
 
   String getDefaultDockerUrl(Project project) {
     String dockerUrl = System.getenv("DOCKER_HOST")
