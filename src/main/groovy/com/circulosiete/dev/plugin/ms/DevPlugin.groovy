@@ -222,6 +222,8 @@ class DevPlugin implements Plugin<Project> {
       project.ext.adminPort = new Integer(adminPort)
     } catch (Throwable t) {
       System.err.println(t.message)
+      project.ext.appPort = 0
+      project.ext.adminPort = 0
     }
 
   }
