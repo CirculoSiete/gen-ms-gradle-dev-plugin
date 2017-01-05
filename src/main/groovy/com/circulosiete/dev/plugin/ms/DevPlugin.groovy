@@ -193,26 +193,24 @@ class DevPlugin implements Plugin<Project> {
     }
 
     def ideaExtension = project.extensions.getByName('idea')
-    ideaExtension {
-      project {
-        ipr {
-          withXml { provider ->
-            // Get XML as groovy.util.Node to work with.
-            def projectXml = provider.asNode()
+    ideaExtension.project {
+      ipr {
+        withXml { provider ->
+          // Get XML as groovy.util.Node to work with.
+          def projectXml = provider.asNode()
 
-            // Find compiler configuration component.
-            def compilerConfiguration = projectXml.component.find { component ->
-              component.'@name' == 'CompilerConfiguration'
-            }
+          // Find compiler configuration component.
+          def compilerConfiguration = projectXml.component.find { component ->
+            component.'@name' == 'CompilerConfiguration'
+          }
 
-            // Replace current annotationProcessing
-            // that is part of the compiler configuration.
-            def currentAnnotationProcessing = compilerConfiguration.annotationProcessing
-            currentAnnotationProcessing.replaceNode {
-              annotationProcessing {
-                profile(name: 'Default', default: true, enabled: true) {
-                  processorPath(useClasspath: true)
-                }
+          // Replace current annotationProcessing
+          // that is part of the compiler configuration.
+          def currentAnnotationProcessing = compilerConfiguration.annotationProcessing
+          currentAnnotationProcessing.replaceNode {
+            annotationProcessing {
+              profile(name: 'Default', default: true, enabled: true) {
+                processorPath(useClasspath: true)
               }
             }
           }
