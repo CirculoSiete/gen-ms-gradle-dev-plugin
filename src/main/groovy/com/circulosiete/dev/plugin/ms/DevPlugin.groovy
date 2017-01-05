@@ -192,38 +192,64 @@ class DevPlugin implements Plugin<Project> {
       conventionMapping.imageName = { project.ext.dockerTag }
     }
 
-  }
+    def ideaExtension = project.extensions.getByName('idea')
+    ideaExtension {
+      project {
+        ipr {
+          withXml { provider ->
+            // Get XML as groovy.util.Node to work with.
+            def projectXml = provider.asNode()
 
-  Closure checkRequiredPlugins = {
-    def checkPlugin = checkPluginName.curry(plugins)
-    [
-      'java', 'eclipse', 'idea', 'application',
-      'com.github.johnrengelman.shadow', 'maven',
-      'com.bmuschko.docker-remote-api'
-    ].each {
-      checkPlugin it
+            // Find compiler configuration component.
+            def compilerConfiguration = projectXml.component.find { component ->
+              component.'@name' == 'CompilerConfiguration'
+            }
+
+            // Replace current annotationProcessing
+            // that is part of the compiler configuration.
+            def currentAnnotationProcessing = compilerConfiguration.annotationProcessing
+            currentAnnotationProcessing.replaceNode {
+              annotationProcessing {
+                profile(name: 'Default', default: true, enabled: true) {
+                  processorPath(useClasspath: true)
+                }
+              }
+            }
+          }
+        }
+      }
     }
-  }
 
-  Closure checkPluginName = { plugins, pluginName ->
-    if (!plugins.hasPlugin(pluginName)) {
-      println "Applying plugin: $pluginName"
-      plugins.apply(pluginName)
+    Closure checkRequiredPlugins = {
+      def checkPlugin = checkPluginName.curry(plugins)
+      [
+        'java', 'eclipse', 'idea', 'application',
+        'com.github.johnrengelman.shadow', 'maven',
+        'com.bmuschko.docker-remote-api'
+      ].each {
+        checkPlugin it
+      }
     }
-  }
 
-  void portApp(Project project) {
-    try {
-      Yaml yaml = new Yaml()
-      Object load = yaml.load(new File(DEFAULT_CONFIG_FILE).text)
-
-      project.ext.appPort = new Integer(load.server.applicationConnectors[0].port)
-      project.ext.adminPort = new Integer(load.server.adminConnectors[0].port)
-    } catch (Throwable t) {
-      project.logger.error(t.message)
-      project.ext.appPort = 0
-      project.ext.adminPort = 0
+    Closure checkPluginName = { plugins, pluginName ->
+      if (!plugins.hasPlugin(pluginName)) {
+        println "Applying plugin: $pluginName"
+        plugins.apply(pluginName)
+      }
     }
-  }
 
-}
+    void portApp(Project project) {
+      try {
+        Yaml yaml = new Yaml()
+        Object load = yaml.load(new File(DEFAULT_CONFIG_FILE).text)
+
+        project.ext.appPort = new Integer(load.server.applicationConnectors[0].port)
+        project.ext.adminPort = new Integer(load.server.adminConnectors[0].port)
+      } catch (Throwable t) {
+        project.logger.error(t.message)
+        project.ext.appPort = 0
+        project.ext.adminPort = 0
+      }
+    }
+
+  }
