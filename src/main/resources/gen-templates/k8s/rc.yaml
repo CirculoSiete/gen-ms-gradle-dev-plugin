@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: ${name}
+spec:
+  replicas: ${replicas}
+  selector:
+    name: ${name}
+    version: ${version}
+  template:
+    metadata:
+      labels:
+        name: ${name}
+        version: ${version}
+    spec:
+      containers:
+      - image: ${tag}
+        name: ${name}
+        ports:
+        - containerPort: ${appPort}
+          protocol: TCP
+        - containerPort: ${adminPort}
+          protocol: TCP
