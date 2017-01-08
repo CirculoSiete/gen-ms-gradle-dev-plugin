@@ -217,6 +217,11 @@ class DevPlugin implements Plugin<Project> {
         }
       }
     }
+
+    project.task('k8s') {
+      description = 'Create Kubernetes configuration.'
+      group = 'Kubernetes'
+    }
   }
 
   Closure checkRequiredPlugins = {
