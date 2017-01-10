@@ -227,8 +227,14 @@ class DevPlugin implements Plugin<Project> {
       println '=' * 50
 
       //String nodePortTemplate = K8sResources.np
+      def k8sServiceName = project.name.split("(?=\\p{Upper})").join('-').toLowerCase()
 
-      Map rcBinding = [name: 'name', replicas: 1, version: 1, tag: 'tag', appPort: 1, adminPort: 1]
+      Map rcBinding = [name     : k8sServiceName, replicas: 2,
+                       version  : project.version,
+                       tag      : project.ext.dockerTag,
+                       appPort  : project.ext.appPort,
+                       adminPort: project.ext.adminPort]
+
       def engine = new groovy.text.SimpleTemplateEngine()
       def template = engine.createTemplate(K8sResources.rc).make(rcBinding)
 
