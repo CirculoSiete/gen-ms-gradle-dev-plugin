@@ -227,7 +227,7 @@ class DevPlugin implements Plugin<Project> {
       }
     }
 
-    project.task('k8s') {
+    project.task([dependsOn: 'createDockerfile'], 'k8s') {
       description = 'Create Kubernetes configuration.'
       group = 'Kubernetes'
 
