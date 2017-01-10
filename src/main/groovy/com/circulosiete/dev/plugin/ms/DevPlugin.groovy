@@ -18,6 +18,8 @@ package com.circulosiete.dev.plugin.ms
 
 import static com.bmuschko.gradle.docker.DockerRemoteApiPlugin.DOCKER_JAVA_CONFIGURATION_NAME
 
+import groovy.text.Template
+import groovy.text.TemplateEngine
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -231,8 +233,6 @@ class DevPlugin implements Plugin<Project> {
       group = 'Kubernetes'
 
       println 'Generating Kubernetes configuration...'
-      println K8sResources.rc
-      println '=' * 50
 
       //String nodePortTemplate = K8sResources.np
       def k8sServiceName = project.name.split("(?=\\p{Upper})").join('-').toLowerCase()
@@ -241,18 +241,32 @@ class DevPlugin implements Plugin<Project> {
         project.ext.k8sReplicas = 2
       }
 
-      Map rcBinding = [name     : k8sServiceName,
-                       replicas : project.ext.k8sReplicas,
-                       version  : project.version,
-                       tag      : project.ext.dockerTag,
-                       appPort  : project.ext.appPort,
-                       adminPort: project.ext.adminPort]
+      Map rcBinding = [
+        name     : k8sServiceName,
+        replicas : project.ext.k8sReplicas,
+        version  : project.version,
+        tag      : project.ext.dockerTag,
+        appPort  : project.ext.appPort,
+        adminPort: project.ext.adminPort,
+      ]
 
-      def engine = new groovy.text.SimpleTemplateEngine()
-      def template = engine.createTemplate(K8sResources.rc).make(rcBinding)
+      TemplateEngine engine = new groovy.text.SimpleTemplateEngine()
+      Template templateRC = engine.createTemplate(K8sResources.rc).make(rcBinding)
 
-      def rcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-rc.yaml")
-      rcFile.append(template.toString())
+      File rcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-rc.yaml")
+      rcFile.append(templateRC.toString())
+
+      Map npBinding = [
+        name            : k8sServiceName,
+        appPort         : project.ext.appPort,
+        exposedAppPort  : project.ext.appPort,
+        adminPort       : project.ext.adminPort,
+        exposedAdminPort: project.ext.adminPort,
+      ]
+      Template templateSVC = engine.createTemplate(K8sResources.np).make(npBinding)
+
+      File svcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-srv-np.yaml")
+      svcFile.append(templateSVC.toString())
     }
   }
 
