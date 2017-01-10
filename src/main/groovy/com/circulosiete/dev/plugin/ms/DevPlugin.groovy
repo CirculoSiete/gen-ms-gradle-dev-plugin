@@ -223,6 +223,9 @@ class DevPlugin implements Plugin<Project> {
       group = 'Kubernetes'
 
       println 'Generating Kubernetes configuration...'
+
+      String templateContents = new File('./gen-templates/k8s/rc.yaml').text
+      println templateContents
     }
   }
 
