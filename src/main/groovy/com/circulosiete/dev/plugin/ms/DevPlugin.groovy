@@ -219,7 +219,8 @@ class DevPlugin implements Plugin<Project> {
       }
     }
 
-    project.task([dependsOn: 'createDockerfile'], 'k8s') {
+    //project.task([dependsOn: 'createDockerfile'], 'k8s') {
+    project.task('k8s') {
       description = 'Create Kubernetes configuration.'
       group = 'Kubernetes'
 
@@ -253,9 +254,11 @@ class DevPlugin implements Plugin<Project> {
       String contentsRC = engine.createTemplate(K8sResources.rc)
         .make(rcBinding).toString()
 
+      println 'Saving files in: ' + project.ext.k8sBuildDirString
+
       File rcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-rc.yaml")
-      println rcFile.absoluteFile.name
       rcFile.append(contentsRC)
+      println rcFile.getName()
 
       Map npBinding = [
         name            : k8sServiceName,
@@ -268,8 +271,8 @@ class DevPlugin implements Plugin<Project> {
         .make(npBinding).toString()
 
       File svcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-srv-np.yaml")
-      println svcFile.absoluteFile.name
       svcFile.append(contentsSvc)
+      println svcFile.name
     }
   }
 
