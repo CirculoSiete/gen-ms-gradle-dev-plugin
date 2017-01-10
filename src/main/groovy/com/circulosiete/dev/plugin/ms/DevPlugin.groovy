@@ -219,8 +219,8 @@ class DevPlugin implements Plugin<Project> {
       }
     }
 
-    //project.task([dependsOn: 'createDockerfile'], 'k8s') {
-    project.task('k8s') {
+    project.task([dependsOn: 'createDockerfile'], 'k8s') {
+    //project.task('k8s') {
       description = 'Create Kubernetes configuration.'
       group = 'Kubernetes'
 
@@ -240,6 +240,9 @@ class DevPlugin implements Plugin<Project> {
       if (!project.ext.has('k8sReplicas')) {
         project.ext.k8sReplicas = 2
       }
+
+      Integer exposedAppPort = (project.ext.appPort - 7000) + 30000
+      Integer exposedAdminPort = (project.ext.adminPort - 17000) + 31000
 
       Map rcBinding = [
         name     : k8sServiceName,
@@ -263,9 +266,9 @@ class DevPlugin implements Plugin<Project> {
       Map npBinding = [
         name            : k8sServiceName,
         appPort         : project.ext.appPort,
-        exposedAppPort  : project.ext.appPort,
+        exposedAppPort  : exposedAppPort,
         adminPort       : project.ext.adminPort,
-        exposedAdminPort: project.ext.adminPort,
+        exposedAdminPort: exposedAdminPort,
       ]
       String contentsSvc = engine.createTemplate(K8sResources.np)
         .make(npBinding).toString()
