@@ -251,7 +251,7 @@ class DevPlugin implements Plugin<Project> {
       def engine = new groovy.text.SimpleTemplateEngine()
       def template = engine.createTemplate(K8sResources.rc).make(rcBinding)
 
-      def rcFile = new File(project.ext.k8sBuildDir + '/' + k8sServiceName + '-rc.yaml')
+      def rcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-rc.yaml")
       rcFile.append(template.toString())
     }
   }
