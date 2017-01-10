@@ -18,7 +18,6 @@ package com.circulosiete.dev.plugin.ms
 
 import static com.bmuschko.gradle.docker.DockerRemoteApiPlugin.DOCKER_JAVA_CONFIGURATION_NAME
 
-import groovy.text.Template
 import groovy.text.TemplateEngine
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -251,10 +250,11 @@ class DevPlugin implements Plugin<Project> {
       ]
 
       TemplateEngine engine = new groovy.text.SimpleTemplateEngine()
-      Template templateRC = engine.createTemplate(K8sResources.rc).make(rcBinding)
+      String contentsRC = engine.createTemplate(K8sResources.rc)
+        .make(rcBinding).toString()
 
       File rcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-rc.yaml")
-      rcFile.append(templateRC.toString())
+      rcFile.append(contentsRC)
 
       Map npBinding = [
         name            : k8sServiceName,
@@ -263,10 +263,11 @@ class DevPlugin implements Plugin<Project> {
         adminPort       : project.ext.adminPort,
         exposedAdminPort: project.ext.adminPort,
       ]
-      Template templateSVC = engine.createTemplate(K8sResources.np).make(npBinding)
+      String contentsSvc = engine.createTemplate(K8sResources.np)
+        .make(npBinding).toString()
 
       File svcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-srv-np.yaml")
-      svcFile.append(templateSVC.toString())
+      svcFile.append(contentsSvc)
     }
   }
 
