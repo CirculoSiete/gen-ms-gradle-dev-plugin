@@ -223,12 +223,16 @@ class DevPlugin implements Plugin<Project> {
       group = 'Kubernetes'
 
       println 'Generating Kubernetes configuration...'
+      println K8sResources.rc
+      println '=' * 50
 
-      String replicationControllerTemplate = K8sResources.rc
-      println replicationControllerTemplate
+      //String nodePortTemplate = K8sResources.np
 
-      String nodePortTemplate = K8sResources.np
-      println nodePortTemplate
+      Map rcBinding = [name: 'name', replicas: 1, version: 1, tag: 'tag', appPort: 1, adminPort: 1]
+      def engine = new groovy.text.SimpleTemplateEngine()
+      def template = engine.createTemplate(K8sResources.rc).make(rcBinding)
+
+      println template.toString()
     }
   }
 
