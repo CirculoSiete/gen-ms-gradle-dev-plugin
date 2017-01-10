@@ -225,7 +225,8 @@ class DevPlugin implements Plugin<Project> {
       println 'Generating Kubernetes configuration...'
 
       try {
-        String templateContents = ClassLoader.getSystemResource('/gentemplates/k8s/rc.yaml').text
+        URL url = ClassLoader.getSystemResource('/gentemplates/k8s/rc.yaml')
+        String templateContents = new File(url.file).text
         println templateContents
       } catch (Throwable t) {
         println t.message
