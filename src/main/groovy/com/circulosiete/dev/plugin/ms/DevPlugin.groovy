@@ -238,16 +238,21 @@ class DevPlugin implements Plugin<Project> {
         project.ext.k8sReplicas = 2
       }
 
+      if (!project.ext.has('k8sConfigPath')) {
+        project.ext.k8sConfigPath = "/config/${k8sServiceName}"
+      }
+
       Integer exposedAppPort = (project.ext.appPort - 7000) + 30000
       Integer exposedAdminPort = (project.ext.adminPort - 17000) + 31000
 
       Map rcBinding = [
-        name     : k8sServiceName,
-        replicas : project.ext.k8sReplicas,
-        version  : project.version,
-        tag      : project.ext.dockerTag,
-        appPort  : project.ext.appPort,
-        adminPort: project.ext.adminPort,
+        name      : k8sServiceName,
+        replicas  : project.ext.k8sReplicas,
+        version   : project.version,
+        tag       : project.ext.dockerTag,
+        appPort   : project.ext.appPort,
+        adminPort : project.ext.adminPort,
+        configPath: project.ext.k8sConfigPath,
       ]
 
       TemplateEngine engine = new groovy.text.SimpleTemplateEngine()

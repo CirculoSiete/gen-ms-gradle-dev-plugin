@@ -39,11 +39,19 @@ spec:
       containers:
       - image: ${tag}
         name: ${name}
+        volumeMounts:
+          - mountPath: /config
+            name: config-${name}
         ports:
         - containerPort: ${appPort}
           protocol: TCP
         - containerPort: ${adminPort}
           protocol: TCP
+      volumes:
+        - name: config-${name}
+          hostPath:
+            # directory location on host
+            path: ${configPath}
 '''
   static final np = '''
 apiVersion: v1
