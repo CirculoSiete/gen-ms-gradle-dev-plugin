@@ -91,14 +91,6 @@ class DevPlugin implements Plugin<Project> {
       project.ext.dockerBuildGroup = 'Docker'
     }
 
-    if (!project.ext.has('k8sBuildDirString')) {
-      project.ext.k8sBuildDirString = "${project.buildDir}/k8s"
-    }
-
-    if (!project.ext.has('k8sBuildDir')) {
-      project.ext.k8sBuildDir = project.mkdir(project.ext.k8sBuildDirString)
-    }
-
     Configuration config = project.configurations[DOCKER_JAVA_CONFIGURATION_NAME]
 
     boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win")
@@ -230,6 +222,14 @@ class DevPlugin implements Plugin<Project> {
     project.task([dependsOn: 'createDockerfile'], 'k8s') {
       description = 'Create Kubernetes configuration.'
       group = 'Kubernetes'
+
+      if (!project.ext.has('k8sBuildDirString')) {
+        project.ext.k8sBuildDirString = "${project.buildDir}/k8s"
+      }
+
+      if (!project.ext.has('k8sBuildDir')) {
+        project.ext.k8sBuildDir = project.mkdir(project.ext.k8sBuildDirString)
+      }
 
       println 'Generating Kubernetes configuration...'
 
