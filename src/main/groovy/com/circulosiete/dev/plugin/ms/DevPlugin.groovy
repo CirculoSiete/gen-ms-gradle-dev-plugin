@@ -90,6 +90,14 @@ class DevPlugin implements Plugin<Project> {
       project.ext.dockerBuildGroup = 'Docker'
     }
 
+    if (!project.ext.has('k8sBuildDirString')) {
+      project.ext.k8sBuildDirString = "${project.buildDir}/k8s"
+    }
+
+    if (!project.ext.has('k8sBuildDir')) {
+      project.ext.k8sBuildDir = project.mkdir(project.ext.k8sBuildDirString)
+    }
+
     Configuration config = project.configurations[DOCKER_JAVA_CONFIGURATION_NAME]
 
     boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win")
@@ -229,7 +237,12 @@ class DevPlugin implements Plugin<Project> {
       //String nodePortTemplate = K8sResources.np
       def k8sServiceName = project.name.split("(?=\\p{Upper})").join('-').toLowerCase()
 
-      Map rcBinding = [name     : k8sServiceName, replicas: 2,
+      if (!project.ext.has('k8sReplicas')) {
+        project.ext.k8sReplicas = 2
+      }
+
+      Map rcBinding = [name     : k8sServiceName,
+                       replicas : project.ext.k8sReplicas,
                        version  : project.version,
                        tag      : project.ext.dockerTag,
                        appPort  : project.ext.appPort,
@@ -238,7 +251,8 @@ class DevPlugin implements Plugin<Project> {
       def engine = new groovy.text.SimpleTemplateEngine()
       def template = engine.createTemplate(K8sResources.rc).make(rcBinding)
 
-      println template.toString()
+      def rcFile = new File(project.ext.k8sBuildDir + '/' + k8sServiceName + '-rc.yaml')
+      rcFile.append(template.toString())
     }
   }
 
