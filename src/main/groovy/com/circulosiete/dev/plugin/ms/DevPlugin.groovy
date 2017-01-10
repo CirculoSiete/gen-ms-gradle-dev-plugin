@@ -254,6 +254,7 @@ class DevPlugin implements Plugin<Project> {
         .make(rcBinding).toString()
 
       File rcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-rc.yaml")
+      println rcFile.absoluteFile.name
       rcFile.append(contentsRC)
 
       Map npBinding = [
@@ -267,6 +268,7 @@ class DevPlugin implements Plugin<Project> {
         .make(npBinding).toString()
 
       File svcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-srv-np.yaml")
+      println svcFile.absoluteFile.name
       svcFile.append(contentsSvc)
     }
   }
