@@ -219,8 +219,8 @@ class DevPlugin implements Plugin<Project> {
       }
     }
 
-    project.task([dependsOn: 'createDockerfile'], 'k8s') {
-    //project.task('k8s') {
+    //project.task([dependsOn: 'createDockerfile'], 'k8s') {
+    project.task('k8s') {
       description = 'Create Kubernetes configuration.'
       group = 'Kubernetes'
 
@@ -232,9 +232,6 @@ class DevPlugin implements Plugin<Project> {
         project.ext.k8sBuildDir = project.mkdir(project.ext.k8sBuildDirString)
       }
 
-      println 'Generating Kubernetes configuration...'
-
-      //String nodePortTemplate = K8sResources.np
       def k8sServiceName = project.name.split("(?=\\p{Upper})").join('-').toLowerCase()
 
       if (!project.ext.has('k8sReplicas')) {
@@ -257,11 +254,9 @@ class DevPlugin implements Plugin<Project> {
       String contentsRC = engine.createTemplate(K8sResources.rc)
         .make(rcBinding).toString()
 
-      println 'Saving files in: ' + project.ext.k8sBuildDirString
-
       File rcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-rc.yaml")
+      rcFile.getParentFile().mkdirs()
       rcFile.append(contentsRC)
-      println rcFile.getName()
 
       Map npBinding = [
         name            : k8sServiceName,
@@ -275,7 +270,6 @@ class DevPlugin implements Plugin<Project> {
 
       File svcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-srv-np.yaml")
       svcFile.append(contentsSvc)
-      println svcFile.name
     }
   }
 
