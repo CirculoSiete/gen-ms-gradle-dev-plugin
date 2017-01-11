@@ -37,16 +37,16 @@ spec:
         version: ${version}
     spec:
       containers:
-      - image: ${tag}
-        name: ${name}
-        volumeMounts:
-          - mountPath: /config
-            name: config-${name}
+        - image: ${tag}
+          name: ${name}
+          volumeMounts:
+            - mountPath: /config
+              name: config-${name}
         ports:
-        - containerPort: ${appPort}
-          protocol: TCP
-        - containerPort: ${adminPort}
-          protocol: TCP
+          - containerPort: ${appPort}
+            protocol: TCP
+          - containerPort: ${adminPort}
+            protocol: TCP
       volumes:
         - name: config-${name}
           hostPath:
@@ -63,15 +63,16 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: ${appPort}
-    targetPort: ${appPort}
-    nodePort: ${exposedAppPort}
-    protocol: TCP
-  - port: ${adminPort}
-    targetPort: ${adminPort}
-    nodePort: ${exposedAdminPort}
-    protocol: TCP
+    - port: ${appPort}
+      targetPort: ${appPort}
+      nodePort: ${exposedAppPort}
+      protocol: TCP
+    - port: ${adminPort}
+      targetPort: ${adminPort}
+      nodePort: ${exposedAdminPort}
+      protocol: TCP
   selector:
     name: ${name}
+    version: ${version}
 '''
 }
