@@ -265,6 +265,7 @@ class DevPlugin implements Plugin<Project> {
 
       Map npBinding = [
         name            : k8sServiceName,
+        version         : project.version,
         appPort         : project.ext.appPort,
         exposedAppPort  : exposedAppPort,
         adminPort       : project.ext.adminPort,
