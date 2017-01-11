@@ -57,8 +57,11 @@ class DevPlugin implements Plugin<Project> {
     if (project.hasProperty('registryUrl')) {
       project.ext.registryUrl = project.property('registryUrl')
     } else {
-      project.ext.registryUrl = 'hub.docker.com'
+      project.ext.registryUrl = 'https://hub.docker.com'
     }
+
+    String d = project.ext.registryUrl.split('//')
+    d.h
 
     if (project.hasProperty('registryUsername')) {
       project.ext.registryUsername = project.property('registryUsername')
@@ -76,7 +79,7 @@ class DevPlugin implements Plugin<Project> {
 
       def tagData = []
       if (project.ext.registryUrl) {
-        tagData << project.ext.registryUrl
+        tagData << project.ext.registryUrl.split('//').toList().stream().filter {!it.startsWith('http')}.findFirst().orElse('')
         tagData << '/'
       }
 
