@@ -54,14 +54,29 @@ class DevPlugin implements Plugin<Project> {
       project.ext.theVersion = project.version
     }
 
+    if (project.hasProperty('registryUrl')) {
+      project.ext.registryUrl = project.property('registryUrl')
+    } else {
+      project.ext.registryUrl = 'hub.docker.com'
+    }
+
+    if (project.hasProperty('registryUsername')) {
+      project.ext.registryUsername = project.property('registryUsername')
+    } else {
+      project.ext.registryUsername = ''
+    }
+
+    if (project.hasProperty('registryPassword')) {
+      project.ext.registryPassword = project.property('registryPassword')
+    } else {
+      project.ext.registryPassword = ''
+    }
+
     if (!project.ext.has('dockerTag')) {
-      if (!project.ext.has('drHub')) {
-        project.ext.drHub = 'vhub.cosapidata.com.pe'
-      }
 
       def tagData = []
-      if (project.ext.drHub) {
-        tagData << project.ext.drHub
+      if (project.ext.registryUrl) {
+        tagData << project.ext.registryUrl
         tagData << '/'
       }
 
@@ -114,10 +129,9 @@ class DevPlugin implements Plugin<Project> {
     def dockerExtension = project.extensions.getByName('docker')
 
     dockerExtension.registryCredentials {
-      url = project.hasProperty('drSunatUrl') ? project.property('drSunatUrl') : ''
-
-      username = project.hasProperty('drSunatUsername') ? project.property('drSunatUsername') : ''
-      password = project.hasProperty('drSunatPassword') ? project.property('drSunatPassword') : ''
+      url = project.ext.registryUrl
+      username = project.ext.registryUsername
+      password = project.ext.registryPassword
     }
 
     def jarManifestAttributes = [
