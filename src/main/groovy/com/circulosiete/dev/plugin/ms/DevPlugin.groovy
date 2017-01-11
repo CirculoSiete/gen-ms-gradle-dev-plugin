@@ -60,9 +60,6 @@ class DevPlugin implements Plugin<Project> {
       project.ext.registryUrl = 'https://hub.docker.com'
     }
 
-    String d = project.ext.registryUrl.split('//')
-    d.h
-
     if (project.hasProperty('registryUsername')) {
       project.ext.registryUsername = project.property('registryUsername')
     } else {
