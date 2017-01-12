@@ -277,7 +277,7 @@ class DevPlugin implements Plugin<Project> {
 
       File rcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-rc.yaml")
       rcFile.getParentFile().mkdirs()
-      rcFile.append(contentsRC)
+      rcFile.text = contentsRC
 
       Map npBinding = [
         name            : k8sServiceName,
