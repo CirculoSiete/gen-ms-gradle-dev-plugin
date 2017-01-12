@@ -76,7 +76,9 @@ class DevPlugin implements Plugin<Project> {
 
       def tagData = []
       if (project.ext.registryUrl) {
-        tagData << project.ext.registryUrl.split('//').toList().stream().filter {!it.startsWith('http')}.findFirst().orElse('')
+        tagData << project.ext.registryUrl.split('//').toList().stream().filter {
+          !it.startsWith('http')
+        }.findFirst().orElse('')
         tagData << '/'
       }
 
@@ -289,7 +291,7 @@ class DevPlugin implements Plugin<Project> {
         .make(npBinding).toString()
 
       File svcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-srv-np.yaml")
-      svcFile.append(contentsSvc)
+      svcFile.text = contentsSvc
     }
   }
 
