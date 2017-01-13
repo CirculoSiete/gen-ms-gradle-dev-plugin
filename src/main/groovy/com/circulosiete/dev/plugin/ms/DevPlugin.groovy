@@ -41,6 +41,8 @@ class DevPlugin implements Plugin<Project> {
     javaPluginConvention.targetCompatibility = 1.8
     //[javaPluginConvention.compileJava, javaPluginConvention.compileTestJava]*.options*.encoding = 'UTF-8'
 
+    def k8sServiceName = project.name.split("(?=\\p{Upper})").join('-').toLowerCase()
+
     Date buildTimeAndDate = new Date()
 
     if (!project.ext.has('buildDate')) {
@@ -91,7 +93,7 @@ class DevPlugin implements Plugin<Project> {
         tagData << '/'
       }
 
-      project.ext.dockerTag = "${tagData.join('')}${project.name}:${project.version}".toLowerCase()
+      project.ext.dockerTag = "${tagData.join('')}${k8sServiceName}:${project.version}".toLowerCase()
 
     }
 
@@ -248,8 +250,6 @@ class DevPlugin implements Plugin<Project> {
       if (!project.ext.has('k8sBuildDir')) {
         project.ext.k8sBuildDir = project.mkdir(project.ext.k8sBuildDirString)
       }
-
-      def k8sServiceName = project.name.split("(?=\\p{Upper})").join('-').toLowerCase()
 
       if (!project.ext.has('k8sReplicas')) {
         project.ext.k8sReplicas = 2
