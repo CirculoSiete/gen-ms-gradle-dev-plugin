@@ -39,6 +39,7 @@ class DevPlugin implements Plugin<Project> {
 
     javaPluginConvention.sourceCompatibility = 1.8
     javaPluginConvention.targetCompatibility = 1.8
+    //[javaPluginConvention.compileJava, javaPluginConvention.compileTestJava]*.options*.encoding = 'UTF-8'
 
     Date buildTimeAndDate = new Date()
 
