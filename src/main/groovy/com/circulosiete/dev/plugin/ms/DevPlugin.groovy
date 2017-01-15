@@ -179,7 +179,9 @@ class DevPlugin implements Plugin<Project> {
 
       destFile = project.file("${project.ext.dockerBuildDir}/Dockerfile")
 
-      if (!project.ext.has('drFromImage')) {
+      if (project.hasProperty('drFromImage')) {
+        project.ext.drFromImage = project.property('drFromImage')
+      } else {
         project.ext.drFromImage = 'openjdk:8u111-jre-alpine'
       }
 
