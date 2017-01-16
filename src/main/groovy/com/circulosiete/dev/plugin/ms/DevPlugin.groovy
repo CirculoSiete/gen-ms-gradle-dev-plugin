@@ -258,12 +258,14 @@ class DevPlugin implements Plugin<Project> {
       }
 
       if (project.hasProperty('k8sBaseConfigPath')) {
-        project.ext.k8sBaseConfigPath = project.property('k8sBaseConfigPath')
+        println "Se ha establecido el base path de k8s"
+        project.ext.k8sBaseConfigPath1 = project.property('k8sBaseConfigPath')
       } else {
-        project.ext.k8sBaseConfigPath = "/config"
+        println "No se tiene el base path de k8s"
+        project.ext.k8sBaseConfigPath1 = "/config"
       }
 
-      project.ext.k8sConfigPath = "/${project.ext.k8sBaseConfigPath}/${k8sServiceName}"
+      project.ext.k8sConfigPath = "/${project.ext.k8sBaseConfigPath1}/${k8sServiceName}"
 
       Integer exposedAppPort = (project.ext.appPort - 7000) + 30000
       Integer exposedAdminPort = (project.ext.adminPort - 17000) + 31000
