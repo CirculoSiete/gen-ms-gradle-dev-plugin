@@ -41,14 +41,14 @@ spec:
           name: ${name}
           volumeMounts:
             - mountPath: /config
-              name: config-${name}
+              name: ${configName}
         ports:
           - containerPort: ${appPort}
             protocol: TCP
           - containerPort: ${adminPort}
             protocol: TCP
       volumes:
-        - name: config-${name}
+        - name: ${configName}
           hostPath:
             # directory location on host
             path: ${configPath}

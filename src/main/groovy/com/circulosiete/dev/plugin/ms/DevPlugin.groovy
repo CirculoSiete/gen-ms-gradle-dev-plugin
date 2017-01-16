@@ -258,10 +258,8 @@ class DevPlugin implements Plugin<Project> {
       }
 
       if (project.hasProperty('k8sBaseConfigPath')) {
-        println "Se ha establecido el base path de k8s"
         project.ext.k8sBaseConfigPath1 = project.property('k8sBaseConfigPath')
       } else {
-        println "No se tiene el base path de k8s"
         project.ext.k8sBaseConfigPath1 = "/config"
       }
 
@@ -278,6 +276,7 @@ class DevPlugin implements Plugin<Project> {
         appPort   : project.ext.appPort,
         adminPort : project.ext.adminPort,
         configPath: project.ext.k8sConfigPath,
+        configName: "config${k8sServiceName.replaceAll('-', '')}",
       ]
 
       TemplateEngine engine = new groovy.text.SimpleTemplateEngine()
