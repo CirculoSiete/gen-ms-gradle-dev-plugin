@@ -257,7 +257,9 @@ class DevPlugin implements Plugin<Project> {
         project.ext.k8sReplicas = 2
       }
 
-      if (!project.hasProperty('k8sBaseConfigPath')) {
+      if (project.hasProperty('k8sBaseConfigPath')) {
+        project.ext.k8sBaseConfigPath = project.property('k8sBaseConfigPath')
+      } else {
         project.ext.k8sBaseConfigPath = "/config"
       }
 
