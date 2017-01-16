@@ -265,7 +265,7 @@ class DevPlugin implements Plugin<Project> {
         project.ext.k8sBaseConfigPath1 = "/config"
       }
 
-      project.ext.k8sConfigPath = "/${project.ext.k8sBaseConfigPath1}/${k8sServiceName}"
+      project.ext.k8sConfigPath = "${project.ext.k8sBaseConfigPath1}/${k8sServiceName}"
 
       Integer exposedAppPort = (project.ext.appPort - 7000) + 30000
       Integer exposedAdminPort = (project.ext.adminPort - 17000) + 31000
