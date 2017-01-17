@@ -314,9 +314,14 @@ class DevPlugin implements Plugin<Project> {
       description = 'Copy Kubernetes configuration to desired location.'
       group = 'Kubernetes'
 
+      if (project.hasProperty('k8sConfigLocation')) {
+        project.ext.k8sConfigLocation = project.property('k8sConfigLocation')
+      } else {
+        project.ext.k8sConfigLocation = project.ext.dockerBuildDir
+      }
 
       from project.ext.k8sBuildDirString
-      into project.ext.dockerBuildDir
+      into project.ext.k8sConfigLocation
     }
   }
 
