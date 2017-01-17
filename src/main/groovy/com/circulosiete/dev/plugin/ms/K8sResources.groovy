@@ -20,8 +20,7 @@ package com.circulosiete.dev.plugin.ms
  * Created by domix on 1/10/17.
  */
 class K8sResources {
-  static final rc = '''
-apiVersion: v1
+  static final rc = '''apiVersion: v1
 kind: ReplicationController
 metadata:
   name: ${name}
@@ -42,19 +41,18 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: ${configName}
-        ports:
-          - containerPort: ${appPort}
-            protocol: TCP
-          - containerPort: ${adminPort}
-            protocol: TCP
+          ports:
+            - containerPort: ${appPort}
+              protocol: TCP
+            - containerPort: ${adminPort}
+              protocol: TCP
       volumes:
         - name: ${configName}
           hostPath:
             # directory location on host
             path: ${configPath}
 '''
-  static final np = '''
-apiVersion: v1
+  static final np = '''apiVersion: v1
 kind: Service
 metadata:
   name: ${name}
