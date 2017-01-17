@@ -42,6 +42,7 @@ class DevPlugin implements Plugin<Project> {
     //[javaPluginConvention.compileJava, javaPluginConvention.compileTestJava]*.options*.encoding = 'UTF-8'
 
     def k8sServiceName = project.name.split("(?=\\p{Upper})").join('-').toLowerCase()
+    project.ext.k8sServiceName = k8sServiceName
 
     Date buildTimeAndDate = new Date()
 
@@ -321,7 +322,7 @@ class DevPlugin implements Plugin<Project> {
       }
 
       from project.ext.k8sBuildDirString
-      into project.ext.k8sConfigLocation
+      into "${project.ext.k8sConfigLocation}/${project.ext.k8sServiceName}"
     }
   }
 
