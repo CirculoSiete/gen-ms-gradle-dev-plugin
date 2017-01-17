@@ -301,6 +301,16 @@ class DevPlugin implements Plugin<Project> {
       File svcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-srv-np.yaml")
       svcFile.text = contentsSvc
     }
+
+    //project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'build'], 'dockerRepackage') {
+    project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'k8s'], 'k8s-copy') {
+      description = 'Copy Kubernetes configuration to desired location.'
+      group = 'Kubernetes'
+
+
+      from project.ext.k8sBuildDirString
+      into project.ext.dockerBuildDir
+    }
   }
 
   Closure checkRequiredPlugins = {

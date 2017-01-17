@@ -23,21 +23,24 @@ class K8sResources {
   static final rc = '''apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: ${name}
+  name: ${name}-rc
 spec:
   replicas: ${replicas}
   selector:
-    name: ${name}
+    name: ${name}-rc
     version: ${version}
   template:
     metadata:
       labels:
-        name: ${name}
+        name: ${name}-rc
         version: ${version}
     spec:
+      imagePullSecrets:
+        - name: ${registryId ?: ''}
       containers:
         - image: ${tag}
-          name: ${name}
+          name: ${name}-img
+          imagePullPolicy: Always
           volumeMounts:
             - mountPath: /config
               name: ${configName}
@@ -55,9 +58,9 @@ spec:
   static final np = '''apiVersion: v1
 kind: Service
 metadata:
-  name: ${name}
+  name: ${name}-srv-np
   labels:
-    name: ${name}
+    name: ${name}-srv-np
 spec:
   type: NodePort
   ports:
@@ -65,12 +68,14 @@ spec:
       targetPort: ${appPort}
       nodePort: ${exposedAppPort}
       protocol: TCP
+      name: app
     - port: ${adminPort}
       targetPort: ${adminPort}
       nodePort: ${exposedAdminPort}
       protocol: TCP
+      name: admin
   selector:
-    name: ${name}
+    name: ${name}-rc
     version: ${version}
 '''
 }
