@@ -263,6 +263,12 @@ class DevPlugin implements Plugin<Project> {
         project.ext.k8sBaseConfigPath1 = "/config"
       }
 
+      if (project.hasProperty('k8sRegistry')) {
+        project.ext.k8sRegistry = project.property('k8sRegistry')
+      } else {
+        project.ext.k8sRegistry = "registry"
+      }
+
       project.ext.k8sConfigPath = "${project.ext.k8sBaseConfigPath1}/${k8sServiceName}"
 
       Integer exposedAppPort = (project.ext.appPort - 7000) + 30000
@@ -276,7 +282,8 @@ class DevPlugin implements Plugin<Project> {
         appPort   : project.ext.appPort,
         adminPort : project.ext.adminPort,
         configPath: project.ext.k8sConfigPath,
-        configName: "config${k8sServiceName.replaceAll('-', '')}",
+        configName: "${k8sServiceName}-config",
+        registryId: project.ext.k8sRegistry,
       ]
 
       TemplateEngine engine = new groovy.text.SimpleTemplateEngine()
