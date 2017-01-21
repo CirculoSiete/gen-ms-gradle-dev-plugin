@@ -270,10 +270,17 @@ class DevPlugin implements Plugin<Project> {
         project.ext.k8sRegistry = "registry"
       }
 
+      if (project.hasProperty('k8sNamespace')) {
+        project.ext.k8sNamespace = project.property('k8sNamespace')
+      } else {
+        project.ext.k8sNamespace = "ns-default"
+      }
+
       project.ext.k8sConfigPath = "${project.ext.k8sBaseConfigPath1}/${k8sServiceName}"
 
       Integer exposedAppPort = (project.ext.appPort - 7000) + 30000
       Integer exposedAdminPort = (project.ext.adminPort - 17000) + 31000
+      String namespace = project.ext.k8sNamespace
 
       Map rcBinding = [
         name      : k8sServiceName,
@@ -285,6 +292,7 @@ class DevPlugin implements Plugin<Project> {
         configPath: project.ext.k8sConfigPath,
         configName: "${k8sServiceName}-config",
         registryId: project.ext.k8sRegistry,
+        namespace : namespace
       ]
 
       TemplateEngine engine = new groovy.text.SimpleTemplateEngine()
@@ -302,6 +310,7 @@ class DevPlugin implements Plugin<Project> {
         exposedAppPort  : exposedAppPort,
         adminPort       : project.ext.adminPort,
         exposedAdminPort: exposedAdminPort,
+        namespace       : namespace
       ]
       String contentsSvc = engine.createTemplate(K8sResources.np)
         .make(npBinding).toString()
