@@ -292,7 +292,7 @@ class DevPlugin implements Plugin<Project> {
         configPath: project.ext.k8sConfigPath,
         configName: "${k8sServiceName}-config",
         registryId: project.ext.k8sRegistry,
-        namespace : namespace
+        namespace : namespace,
       ]
 
       TemplateEngine engine = new groovy.text.SimpleTemplateEngine()
@@ -310,7 +310,7 @@ class DevPlugin implements Plugin<Project> {
         exposedAppPort  : exposedAppPort,
         adminPort       : project.ext.adminPort,
         exposedAdminPort: exposedAdminPort,
-        namespace       : namespace
+        namespace       : namespace,
       ]
       String contentsSvc = engine.createTemplate(K8sResources.np)
         .make(npBinding).toString()
