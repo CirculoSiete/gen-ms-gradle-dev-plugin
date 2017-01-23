@@ -241,7 +241,6 @@ class DevPlugin implements Plugin<Project> {
       }
     }
 
-    //project.task([dependsOn: 'createDockerfile'], 'k8s') {
     project.task('k8s') {
       description = 'Create Kubernetes configuration.'
       group = 'Kubernetes'
@@ -319,7 +318,6 @@ class DevPlugin implements Plugin<Project> {
       svcFile.text = contentsSvc
     }
 
-    //project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'build'], 'dockerRepackage') {
     project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'k8s'], 'k8s-copy') {
       description = 'Copy Kubernetes configuration to desired location.'
       group = 'Kubernetes'
