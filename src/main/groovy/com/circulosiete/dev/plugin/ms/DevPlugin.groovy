@@ -212,6 +212,8 @@ class DevPlugin implements Plugin<Project> {
     }
 
     project.task([type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage, dependsOn: 'buildImage'], 'pushImage') {
+      description = 'Push Docker image to the registry.'
+      group = project.ext.dockerBuildGroup
       conventionMapping.imageName = { project.ext.dockerTag }
     }
 
