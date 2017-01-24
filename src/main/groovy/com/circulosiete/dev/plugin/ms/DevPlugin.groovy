@@ -190,6 +190,15 @@ class DevPlugin implements Plugin<Project> {
         project.ext.drMantainer = 'Domingo Suarez Torres <domingo@circulosiete.com>'
       }
 
+      if (!project.ext.has('dockerExtraVolumes')) {
+        project.ext.dockerExtraVolumes = []
+      }
+
+      project.ext.dockerExtraVolumes << '/config'
+
+      def extraVolumes = new String[project.ext.dockerExtraVolumes.size()]
+      project.ext.dockerExtraVolumes.toArray(extraVolumes)
+
       from project.ext.drFromImage
       maintainer project.ext.drMantainer
 
@@ -197,7 +206,7 @@ class DevPlugin implements Plugin<Project> {
 
       copyFile project.ext.finalJarFilename, '/app/application.jar'
 
-      volume '/config'
+      volume extraVolumes
 
       entryPoint 'java', '-jar', '/app/application.jar', 'server', '/config/config.yaml'
 
