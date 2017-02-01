@@ -194,6 +194,16 @@ class DevPlugin implements Plugin<Project> {
         project.ext.dockerExtraVolumes = []
       }
 
+      if (!project.ext.has('jvmTimeZone')) {
+        project.ext.jvmTimeZone = 'America/Lima'
+      }
+
+      if (!project.ext.has('jvmMemory')) {
+        project.ext.jvmMemory = '128m'
+      }
+
+      def theJvmMemory = project.ext.jvmMemory
+
       project.ext.dockerExtraVolumes << '/config'
 
       def extraVolumes = new String[project.ext.dockerExtraVolumes.size()]
@@ -208,7 +218,7 @@ class DevPlugin implements Plugin<Project> {
 
       volume extraVolumes
 
-      entryPoint 'java', '-jar', '/app/application.jar', 'server', '/config/config.yaml'
+      entryPoint 'java', "-DserviceName=${k8sServiceName}", "-Duser.timezone=${project.ext.jvmTimeZone}", "-Xms${theJvmMemory}", "-Xmx${theJvmMemory}", '-jar', '/app/application.jar', 'server', '/config/config.yaml'
 
     }
 
