@@ -24,7 +24,7 @@ class K8sResources {
 kind: ReplicationController
 metadata:
   name: ${name}-rc
-  namespace: ${namespace}
+  ${namespace}
 spec:
   replicas: ${replicas}
   selector:
@@ -62,7 +62,7 @@ metadata:
   name: ${name}-srv-np
   labels:
     name: ${name}-srv-np
-  namespace: ${namespace}
+  ${namespace}
 spec:
   type: NodePort
   ports:
