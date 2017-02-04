@@ -293,7 +293,7 @@ class DevPlugin implements Plugin<Project> {
       if (project.hasProperty('k8sNamespace')) {
         project.ext.k8sNamespace = project.property('k8sNamespace')
       } else {
-        project.ext.k8sNamespace = "ns-default"
+        project.ext.k8sNamespace = ""
       }
 
       project.ext.k8sConfigPath = "${project.ext.k8sBaseConfigPath1}/${k8sServiceName}"
