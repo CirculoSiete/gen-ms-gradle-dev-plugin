@@ -300,7 +300,7 @@ class DevPlugin implements Plugin<Project> {
 
       Integer exposedAppPort = (project.ext.appPort - 7000) + 30000
       Integer exposedAdminPort = (project.ext.adminPort - 17000) + 31000
-      String namespace = "namespace: ${project.ext.k8sNamespace}"
+      String namespace = project.ext.k8sNamespace ? "namespace: ${project.ext.k8sNamespace}" : ''
 
       Map rcBinding = [
         name      : k8sServiceName,
