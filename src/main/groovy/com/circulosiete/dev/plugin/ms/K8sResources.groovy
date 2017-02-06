@@ -50,6 +50,12 @@ spec:
               protocol: TCP
             - containerPort: ${adminPort}
               protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: ${adminPort}
+            initialDelaySeconds: 15
+            periodSeconds: 3
       volumes:
         - name: ${configName}
           hostPath:
