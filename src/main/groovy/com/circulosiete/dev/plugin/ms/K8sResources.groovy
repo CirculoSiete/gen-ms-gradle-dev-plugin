@@ -54,8 +54,8 @@ spec:
             httpGet:
               path: /healthcheck
               port: ${adminPort}
-            initialDelaySeconds: 15
-            periodSeconds: 3
+            initialDelaySeconds: 60
+            periodSeconds: 30
       volumes:
         - name: ${configName}
           hostPath:
