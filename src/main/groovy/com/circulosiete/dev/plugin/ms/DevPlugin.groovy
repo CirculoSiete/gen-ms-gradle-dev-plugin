@@ -23,6 +23,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.plugins.quality.FindBugsExtension
 import org.yaml.snakeyaml.Yaml
 
 import java.text.SimpleDateFormat
@@ -140,11 +141,11 @@ class DevPlugin implements Plugin<Project> {
       password = project.ext.registryPassword
     }
 
-    project.extensions.getByName('findBugs') {
-      effort = 'max'
-      reportLevel = 'low'
-      ignoreFailures = true
-    }
+    FindBugsExtension findBugs = project.extensions.getByName('findBugs')
+
+    findBugs.effort = 'max'
+    findBugs.reportLevel = 'low'
+    findBugs.ignoreFailures = true
 
     def jarManifestAttributes = [
       'Built-By'              : "Domingo Suarez Torres @ CirculoSiete.com (${System.properties['user.name']})",
