@@ -153,26 +153,26 @@ class DevPlugin implements Plugin<Project> {
     Integer buildNumber = System.getenv().BUILD_NUMBER?.toInteger() ?: 0
     Boolean runningInJenkins = buildNumber > 0
 
-    project.task([type: org.gradle.api.plugins.quality.FindBugs]).configure {
+    /*project.task([type: org.gradle.api.plugins.quality.FindBugs]).configure {
       reports {
         boolean enabledXml = runningInJenkins
         xml.enabled enabledXml
         html.enabled !enabledXml
       }
-    }
+    }*/
 
     CheckstyleExtension checkstyleExt = project.extensions.getByName('checkstyle')
     checkstyleExt.ignoreFailures = true
     checkstyleExt.showViolations = false
     checkstyleExt.toolVersion = '7.4'
 
-    project.task([type: org.gradle.api.plugins.quality.Checkstyle]).configure {
+    /*project.task([type: org.gradle.api.plugins.quality.Checkstyle]).configure {
       reports {
         boolean enabledXml = runningInJenkins
         xml.enabled enabledXml
         html.enabled !enabledXml
       }
-    }
+    }*/
 
     JacocoPluginExtension jacocoExt = project.extensions.getByName('jacoco')
     jacocoExt.toolVersion = '0.7.8'
