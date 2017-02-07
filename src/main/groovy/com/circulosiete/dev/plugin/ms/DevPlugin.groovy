@@ -23,7 +23,10 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.plugins.quality.CheckstyleExtension
 import org.gradle.api.plugins.quality.FindBugsExtension
+import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
+import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.yaml.snakeyaml.Yaml
 
 import java.text.SimpleDateFormat
@@ -146,6 +149,41 @@ class DevPlugin implements Plugin<Project> {
     findBugs.effort = 'max'
     findBugs.reportLevel = 'low'
     findBugs.ignoreFailures = true
+
+    Integer buildNumber = System.getenv().BUILD_NUMBER?.toInteger() ?: 0
+    Boolean runningInJenkins = buildNumber > 0
+
+    project.task([type: org.gradle.api.plugins.quality.FindBugs]).configure {
+      reports {
+        boolean enabledXml = runningInJenkins
+        xml.enabled enabledXml
+        html.enabled !enabledXml
+      }
+    }
+
+    CheckstyleExtension checkstyleExt = project.extensions.getByName('checkstyle')
+    checkstyleExt.ignoreFailures = true
+    checkstyleExt.showViolations = false
+    checkstyleExt.toolVersion = '7.4'
+
+    project.task([type: org.gradle.api.plugins.quality.Checkstyle]).configure {
+      reports {
+        boolean enabledXml = runningInJenkins
+        xml.enabled enabledXml
+        html.enabled !enabledXml
+      }
+    }
+
+    JacocoPluginExtension jacocoExt = project.extensions.getByName('jacoco')
+    jacocoExt.toolVersion = '0.7.8'
+
+    /*project.task([type: org.gradle.testing.jacoco.tasks.JacocoReport]).configure {
+      reports {
+        boolean enabledXml = runningInJenkins
+        xml.enabled enabledXml
+        html.enabled !enabledXml
+      }
+    }*/
 
     def jarManifestAttributes = [
       'Built-By'              : "Domingo Suarez Torres @ CirculoSiete.com (${System.properties['user.name']})",
