@@ -141,7 +141,7 @@ class DevPlugin implements Plugin<Project> {
       password = project.ext.registryPassword
     }
 
-    FindBugsExtension findBugs = project.extensions.getByName('findBugs')
+    FindBugsExtension findBugs = project.extensions.getByName('findbugs')
 
     findBugs.effort = 'max'
     findBugs.reportLevel = 'low'
