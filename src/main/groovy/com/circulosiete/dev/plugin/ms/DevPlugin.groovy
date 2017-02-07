@@ -140,6 +140,12 @@ class DevPlugin implements Plugin<Project> {
       password = project.ext.registryPassword
     }
 
+    project.extensions.getByName('findBugs') {
+      effort = 'max'
+      reportLevel = 'low'
+      ignoreFailures = true
+    }
+
     def jarManifestAttributes = [
       'Built-By'              : "Domingo Suarez Torres @ CirculoSiete.com (${System.properties['user.name']})",
       'Created-By'            : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.getProperty('java.vm.version')})",
@@ -359,7 +365,9 @@ class DevPlugin implements Plugin<Project> {
     [
       'java', 'eclipse', 'idea', 'application',
       'com.github.johnrengelman.shadow', 'maven',
-      'com.bmuschko.docker-remote-api'
+      'com.bmuschko.docker-remote-api', 'jacoco',
+      'findbugs', 'checkstyle', 'jdepend', 'pmd',
+      "org.sonarqube"
     ].each {
       checkPlugin it
     }
