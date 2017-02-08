@@ -24,8 +24,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPluginConvention
-import org.gradle.api.plugins.quality.FindBugsExtension
-import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
 import org.yaml.snakeyaml.Yaml
 
 import java.text.SimpleDateFormat
@@ -124,6 +122,10 @@ class DevPlugin implements Plugin<Project> {
       }
     }
 
+    Integer buildNumber = System.getenv().BUILD_NUMBER?.toInteger() ?: 0
+    Boolean runningInJenkins = buildNumber > 0
+    project.ext.runningInJenkins = runningInJenkins
+
     project.tasks.getByName('shadowJar').configure {
       mergeServiceFiles()
       exclude 'META-INF/*.DSA'
@@ -147,36 +149,8 @@ class DevPlugin implements Plugin<Project> {
 
     CheckstylePluginHelper.setupCheckstyle(project, temporalBuildDir)
 
-    FindBugsExtension findBugs = project.extensions.getByName('findbugs')
-
-    findBugs.effort = 'max'
-    findBugs.reportLevel = 'low'
-    findBugs.ignoreFailures = true
-
-    Integer buildNumber = System.getenv().BUILD_NUMBER?.toInteger() ?: 0
-    Boolean runningInJenkins = buildNumber > 0
-
-    /*project.task([type: org.gradle.api.plugins.quality.FindBugs]).configure {
-      reports {
-        boolean enabledXml = runningInJenkins
-        xml.enabled enabledXml
-        html.enabled !enabledXml
-      }
-    }*/
-
-
-
-
-    JacocoPluginExtension jacocoExt = project.extensions.getByName('jacoco')
-    jacocoExt.toolVersion = '0.7.8'
-
-    /*project.task([type: org.gradle.testing.jacoco.tasks.JacocoReport]).configure {
-      reports {
-        boolean enabledXml = runningInJenkins
-        xml.enabled enabledXml
-        html.enabled !enabledXml
-      }
-    }*/
+    project.task([type: MsSetupTask, dependsOn: 'processResources'], 'setupMs') {
+    }
 
     def jarManifestAttributes = [
       'Built-By'              : "Domingo Suarez Torres @ CirculoSiete.com (${System.properties['user.name']})",
@@ -196,6 +170,7 @@ class DevPlugin implements Plugin<Project> {
       args 'server', DEFAULT_CONFIG_FILE
     }
 
+    project.tasks.getByName('classes').dependsOn('setupMs')
     project.tasks.getByName('build').dependsOn('shadowJar')
 
     portApp(project)
@@ -397,14 +372,12 @@ class DevPlugin implements Plugin<Project> {
     [
       'java', 'eclipse', 'idea', 'application',
       'com.github.johnrengelman.shadow', 'maven',
-      'com.bmuschko.docker-remote-api', 'jacoco',
-      'findbugs', 'jdepend', 'pmd',
-      "org.sonarqube"
+      'com.bmuschko.docker-remote-api', 'jdepend',
+      'pmd', 'checkstyle', 'findbugs', 'jacoco',
+      'org.sonarqube'
     ].each {
       checkPlugin it
     }
-
-
   }
 
   Closure checkPluginName = { plugins, pluginName ->
