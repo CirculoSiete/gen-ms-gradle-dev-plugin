@@ -29,7 +29,13 @@ class CheckstylePluginHelper {
   static setupCheckstyle(Project project, String buildDir) {
     project.apply plugin: 'checkstyle'
 
-    FileUtils.copyURLToFile(this.getClass().getResource('/c7/quality/checkstyle.xml'), new File("$buildDir/checkstyle.xml"))
+    def resource = this.getClass().getResource('/c7/quality/checkstyle.xml')
+    if(resource) {
+      FileUtils.copyURLToFile(resource, new File("$buildDir/checkstyle.xml"))
+    } else {
+      throw new RuntimeException("No se pudo cargar el archivo")
+    }
+
 
     project.tasks.withType(Checkstyle) { task ->
     }
