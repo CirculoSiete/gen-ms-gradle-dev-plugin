@@ -18,15 +18,14 @@ package com.circulosiete.dev.plugin.ms
 
 import static com.bmuschko.gradle.docker.DockerRemoteApiPlugin.DOCKER_JAVA_CONFIGURATION_NAME
 
+import com.circulosiete.dev.plugin.ms.codequality.CheckstylePluginHelper
 import groovy.text.TemplateEngine
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPluginConvention
-import org.gradle.api.plugins.quality.CheckstyleExtension
 import org.gradle.api.plugins.quality.FindBugsExtension
 import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
-import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.yaml.snakeyaml.Yaml
 
 import java.text.SimpleDateFormat
@@ -144,6 +143,10 @@ class DevPlugin implements Plugin<Project> {
       password = project.ext.registryPassword
     }
 
+    String temporalBuildDir = "${project.buildDir}/work"
+
+    CheckstylePluginHelper.setupCheckstyle(project, temporalBuildDir)
+
     FindBugsExtension findBugs = project.extensions.getByName('findbugs')
 
     findBugs.effort = 'max'
@@ -161,18 +164,8 @@ class DevPlugin implements Plugin<Project> {
       }
     }*/
 
-    CheckstyleExtension checkstyleExt = project.extensions.getByName('checkstyle')
-    checkstyleExt.ignoreFailures = true
-    checkstyleExt.showViolations = false
-    checkstyleExt.toolVersion = '7.4'
 
-    /*project.task([type: org.gradle.api.plugins.quality.Checkstyle]).configure {
-      reports {
-        boolean enabledXml = runningInJenkins
-        xml.enabled enabledXml
-        html.enabled !enabledXml
-      }
-    }*/
+
 
     JacocoPluginExtension jacocoExt = project.extensions.getByName('jacoco')
     jacocoExt.toolVersion = '0.7.8'
@@ -405,11 +398,13 @@ class DevPlugin implements Plugin<Project> {
       'java', 'eclipse', 'idea', 'application',
       'com.github.johnrengelman.shadow', 'maven',
       'com.bmuschko.docker-remote-api', 'jacoco',
-      'findbugs', 'checkstyle', 'jdepend', 'pmd',
+      'findbugs', 'jdepend', 'pmd',
       "org.sonarqube"
     ].each {
       checkPlugin it
     }
+
+
   }
 
   Closure checkPluginName = { plugins, pluginName ->
