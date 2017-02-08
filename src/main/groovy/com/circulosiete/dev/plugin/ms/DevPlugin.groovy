@@ -147,7 +147,7 @@ class DevPlugin implements Plugin<Project> {
 
     String temporalBuildDir = "${project.buildDir}/work"
 
-    QualityConfigHelper.setupCheckstyle(project, temporalBuildDir)
+    QualityConfigHelper.setup(project, temporalBuildDir)
 
     project.task([type: MsSetupTask, dependsOn: 'processResources'], 'setupMs') {
     }

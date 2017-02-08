@@ -27,7 +27,8 @@ import org.gradle.testing.jacoco.tasks.JacocoReport
  */
 @Slf4j
 class QualityConfigHelper {
-  static setupCheckstyle(Project project, String buildDir) {
+
+  static setup(Project project, String buildDir) {
 
     project.checkstyle {
       ignoreFailures = true
