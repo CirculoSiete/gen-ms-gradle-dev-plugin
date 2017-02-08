@@ -16,6 +16,7 @@
  */
 package com.circulosiete.dev.plugin.ms.codequality
 
+import com.circulosiete.dev.plugin.ms.DevPlugin
 import groovy.util.logging.Slf4j
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
@@ -29,8 +30,8 @@ class CheckstylePluginHelper {
   static setupCheckstyle(Project project, String buildDir) {
     project.apply plugin: 'checkstyle'
 
-    def resource = CheckstylePluginHelper.getClassLoader().getResource('/c7/quality/checkstyle.xml')
-    if(resource) {
+    def resource = DevPlugin.getClassLoader().getResource('/c7/quality/checkstyle.xml')
+    if (resource) {
       FileUtils.copyURLToFile(resource, new File("$buildDir/checkstyle.xml"))
     } else {
       throw new RuntimeException("No se pudo cargar el archivo")
