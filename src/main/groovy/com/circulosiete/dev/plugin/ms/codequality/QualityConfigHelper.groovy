@@ -26,7 +26,7 @@ import org.gradle.testing.jacoco.tasks.JacocoReport
  * Created by domix on 2/8/17.
  */
 @Slf4j
-class CheckstylePluginHelper {
+class QualityConfigHelper {
   static setupCheckstyle(Project project, String buildDir) {
 
     project.checkstyle {

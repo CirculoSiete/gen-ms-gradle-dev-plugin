@@ -18,7 +18,7 @@ package com.circulosiete.dev.plugin.ms
 
 import static com.bmuschko.gradle.docker.DockerRemoteApiPlugin.DOCKER_JAVA_CONFIGURATION_NAME
 
-import com.circulosiete.dev.plugin.ms.codequality.CheckstylePluginHelper
+import com.circulosiete.dev.plugin.ms.codequality.QualityConfigHelper
 import groovy.text.TemplateEngine
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -147,7 +147,7 @@ class DevPlugin implements Plugin<Project> {
 
     String temporalBuildDir = "${project.buildDir}/work"
 
-    CheckstylePluginHelper.setupCheckstyle(project, temporalBuildDir)
+    QualityConfigHelper.setupCheckstyle(project, temporalBuildDir)
 
     project.task([type: MsSetupTask, dependsOn: 'processResources'], 'setupMs') {
     }
