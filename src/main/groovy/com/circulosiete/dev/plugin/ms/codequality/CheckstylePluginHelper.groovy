@@ -29,7 +29,7 @@ class CheckstylePluginHelper {
   static setupCheckstyle(Project project, String buildDir) {
     project.apply plugin: 'checkstyle'
 
-    def resource = CheckstylePluginHelper.getClass().getResource('/c7/quality/checkstyle.xml')
+    def resource = CheckstylePluginHelper.getClassLoader().getResource('/c7/quality/checkstyle.xml')
     if(resource) {
       FileUtils.copyURLToFile(resource, new File("$buildDir/checkstyle.xml"))
     } else {
