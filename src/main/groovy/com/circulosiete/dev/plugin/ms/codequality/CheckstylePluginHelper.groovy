@@ -28,6 +28,15 @@ import org.gradle.api.plugins.quality.Checkstyle
 @Slf4j
 class CheckstylePluginHelper {
   static setupCheckstyle(Project project, String buildDir) {
+    new URLConnection(new URL("file:///")) {
+      {
+        setDefaultUseCaches(false)
+      }
+      @Override
+      void connect() throws IOException {
+      }
+    }
+
     project.apply plugin: 'checkstyle'
 
     def resource = DevPlugin.getClassLoader().getResource('/c7/quality/checkstyle.xml')
