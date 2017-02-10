@@ -42,5 +42,31 @@ class MsSetupTask extends DefaultTask {
     } else {
       throw new RuntimeException("No se pudo cargar el archivo")
     }
+
+
+
+    /*if (!project.ext.has('dockerBuildDir')) {
+      project.ext.dockerBuildDir = project.mkdir(project.ext.dockerBuildDirString)
+    }
+
+    if (!project.ext.has('k8sBuildDirString')) {
+      project.ext.k8sBuildDirString = "${project.buildDir}/k8s"
+    }
+
+
+    */
+
+    def dbd = createIfNotExists(project.ext.dockerBuildDirString)
+    createIfNotExists(project.ext.k8sBuildDirString)
+
+    project.ext.dockerBuildDir = dbd
+  }
+
+  File createIfNotExists(String directory) {
+    def file = new File(directory)
+    if (!file.exists()) {
+      file.mkdirs()
+    }
+    file
   }
 }

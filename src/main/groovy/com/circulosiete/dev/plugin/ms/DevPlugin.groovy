@@ -19,7 +19,6 @@ package com.circulosiete.dev.plugin.ms
 import static com.bmuschko.gradle.docker.DockerRemoteApiPlugin.DOCKER_JAVA_CONFIGURATION_NAME
 
 import com.circulosiete.dev.plugin.ms.codequality.QualityConfigHelper
-import groovy.text.TemplateEngine
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -105,8 +104,12 @@ class DevPlugin implements Plugin<Project> {
       project.ext.dockerBuildDirString = "${project.buildDir}/docker"
     }
 
-    if (!project.ext.has('dockerBuildDir')) {
-      project.ext.dockerBuildDir = project.mkdir(project.ext.dockerBuildDirString)
+    if (!project.ext.has('dockerBuildDirString')) {
+      project.ext.dockerBuildDirString = "${project.buildDir}/docker"
+    }
+
+    if (!project.ext.has('k8sBuildDirString')) {
+      project.ext.k8sBuildDirString = "${project.buildDir}/k8s"
     }
 
     if (!project.ext.has('dockerBuildGroup')) {
@@ -184,14 +187,14 @@ class DevPlugin implements Plugin<Project> {
       }
 
       from "build/libs/${project.ext.finalJarFilename}"
-      into project.ext.dockerBuildDir
+      into project.mkdir(project.ext.dockerBuildDirString)
     }
 
-    project.task([type: com.bmuschko.gradle.docker.tasks.image.Dockerfile, dependsOn: 'dockerRepackage'], 'createDockerfile') {
+    project.task([type: com.bmuschko.gradle.docker.tasks.image.Dockerfile, dependsOn: 'setupMs'], 'createDockerfile') {
       description = 'Create Dockerfile to build image.'
       group = project.ext.dockerBuildGroup
 
-      destFile = project.file("${project.ext.dockerBuildDir}/Dockerfile")
+      destFile = project.file("${project.ext.dockerBuildDirString}/Dockerfile")
 
       if (project.hasProperty('drFromImage')) {
         project.ext.drFromImage = project.property('drFromImage')
@@ -231,15 +234,15 @@ class DevPlugin implements Plugin<Project> {
 
       volume extraVolumes
 
-      entryPoint 'java', "-DserviceName=${k8sServiceName}", "-Duser.timezone=${project.ext.jvmTimeZone}", "-Xms${theJvmMemory}", "-Xmx${theJvmMemory}", '-jar', '/app/application.jar', 'server', '/config/config.yaml'
+      entryPoint 'java', "-Djava.awt.headless=true", "-DserviceName=${k8sServiceName}", "-Duser.timezone=${project.ext.jvmTimeZone}", "-Xms${theJvmMemory}", "-Xmx${theJvmMemory}", '-jar', '/app/application.jar', 'server', '/config/config.yaml'
 
     }
 
-    project.task([type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage, dependsOn: 'createDockerfile'], 'buildImage') {
+    project.task([type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage], 'buildImage') {
       description = 'Create Docker image with application.'
       group = project.ext.dockerBuildGroup
 
-      inputDir = project.file(project.ext.dockerBuildDir)
+      inputDir = project.file(project.ext.dockerBuildDirString)
       tag = project.ext.dockerTag
     }
 
@@ -248,6 +251,11 @@ class DevPlugin implements Plugin<Project> {
       group = project.ext.dockerBuildGroup
       conventionMapping.imageName = { project.ext.dockerTag }
     }
+
+    project.tasks.getByName('buildImage').dependsOn('dockerRepackage')
+    project.tasks.getByName('buildImage').dependsOn('createDockerfile')
+
+    project.tasks.findByName('dockerRepackage').mustRunAfter 'createDockerfile'
 
     def ideaExtension = project.extensions.getByName('idea')
     ideaExtension.project {
@@ -275,81 +283,9 @@ class DevPlugin implements Plugin<Project> {
       }
     }
 
-    project.task('k8s') {
+    project.task([type: K8sTask, dependsOn: 'createDockerfile'], 'k8s') {
       description = 'Create Kubernetes configuration.'
       group = 'Kubernetes'
-
-      if (!project.ext.has('k8sBuildDirString')) {
-        project.ext.k8sBuildDirString = "${project.buildDir}/k8s"
-      }
-
-      if (!project.ext.has('k8sBuildDir')) {
-        project.ext.k8sBuildDir = project.mkdir(project.ext.k8sBuildDirString)
-      }
-
-      if (!project.ext.has('k8sReplicas')) {
-        project.ext.k8sReplicas = 2
-      }
-
-      if (project.hasProperty('k8sBaseConfigPath')) {
-        project.ext.k8sBaseConfigPath1 = project.property('k8sBaseConfigPath')
-      } else {
-        project.ext.k8sBaseConfigPath1 = "/config"
-      }
-
-      if (project.hasProperty('k8sRegistry')) {
-        project.ext.k8sRegistry = project.property('k8sRegistry')
-      } else {
-        project.ext.k8sRegistry = "registry"
-      }
-
-      if (project.hasProperty('k8sNamespace')) {
-        project.ext.k8sNamespace = project.property('k8sNamespace')
-      } else {
-        project.ext.k8sNamespace = ""
-      }
-
-      project.ext.k8sConfigPath = "${project.ext.k8sBaseConfigPath1}/${k8sServiceName}"
-
-      Integer exposedAppPort = (project.ext.appPort - 7000) + 30000
-      Integer exposedAdminPort = (project.ext.adminPort - 17000) + 31000
-      String namespace = project.ext.k8sNamespace ? "namespace: ${project.ext.k8sNamespace}" : ''
-
-      Map rcBinding = [
-        name      : k8sServiceName,
-        replicas  : project.ext.k8sReplicas,
-        version   : project.version,
-        tag       : project.ext.dockerTag,
-        appPort   : project.ext.appPort,
-        adminPort : project.ext.adminPort,
-        configPath: project.ext.k8sConfigPath,
-        configName: "${k8sServiceName}-config",
-        registryId: project.ext.k8sRegistry,
-        namespace : namespace,
-      ]
-
-      TemplateEngine engine = new groovy.text.SimpleTemplateEngine()
-      String contentsRC = engine.createTemplate(K8sResources.rc)
-        .make(rcBinding).toString()
-
-      File rcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-rc.yaml")
-      rcFile.getParentFile().mkdirs()
-      rcFile.text = contentsRC
-
-      Map npBinding = [
-        name            : k8sServiceName,
-        version         : project.version,
-        appPort         : project.ext.appPort,
-        exposedAppPort  : exposedAppPort,
-        adminPort       : project.ext.adminPort,
-        exposedAdminPort: exposedAdminPort,
-        namespace       : namespace,
-      ]
-      String contentsSvc = engine.createTemplate(K8sResources.np)
-        .make(npBinding).toString()
-
-      File svcFile = new File("${project.ext.k8sBuildDirString}/${k8sServiceName}-srv-np.yaml")
-      svcFile.text = contentsSvc
     }
 
     project.task([type: org.gradle.api.tasks.Copy, dependsOn: 'k8s'], 'k8s-copy') {
