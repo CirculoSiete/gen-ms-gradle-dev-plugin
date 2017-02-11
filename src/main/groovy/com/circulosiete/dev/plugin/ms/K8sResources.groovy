@@ -42,6 +42,13 @@ spec:
         - image: ${tag}
           name: ${name}-img
           imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
           volumeMounts:
             - mountPath: /config
               name: ${configName}
