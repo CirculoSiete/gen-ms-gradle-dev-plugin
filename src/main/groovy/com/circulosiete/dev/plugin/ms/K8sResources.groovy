@@ -69,6 +69,19 @@ spec:
           hostPath:
             # directory location on host
             path: ${configPath}
+#---
+# apiVersion: autoscaling/v1
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: ${name}-hpas
+#   ${namespace}
+# spec:
+#   maxReplicas: ${max_replicas}
+#   minReplicas: ${replicas}
+#   scaleTargetRef:
+#     apiVersion: v1
+#     kind: ReplicationController
+#     name: ${name}-rc
 '''
   static final np = '''apiVersion: v1
 kind: Service

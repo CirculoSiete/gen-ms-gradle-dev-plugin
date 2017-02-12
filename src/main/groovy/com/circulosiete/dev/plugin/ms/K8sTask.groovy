@@ -33,6 +33,10 @@ class K8sTask extends DefaultTask {
       project.ext.k8sReplicas = 2
     }
 
+    if (!project.hasProperty('k8sMaxReplicas')) {
+      project.ext.k8sMaxReplicas = 4
+    }
+
     if (project.hasProperty('k8sBaseConfigPath')) {
       project.ext.k8sBaseConfigPath1 = project.property('k8sBaseConfigPath')
     } else {
@@ -59,16 +63,17 @@ class K8sTask extends DefaultTask {
     String namespace = project.ext.k8sNamespace ? "namespace: ${project.ext.k8sNamespace}" : ''
 
     Map rcBinding = [
-      name      : k8sServiceName,
-      replicas  : project.ext.k8sReplicas,
-      version   : project.version,
-      tag       : project.ext.dockerTag,
-      appPort   : project.ext.appPort,
-      adminPort : project.ext.adminPort,
-      configPath: project.ext.k8sConfigPath,
-      configName: "${k8sServiceName}-config",
-      registryId: project.ext.k8sRegistry,
-      namespace : namespace,
+      name        : k8sServiceName,
+      replicas    : project.ext.k8sReplicas,
+      max_replicas: project.ext.k8sMaxReplicas,
+      version     : project.version,
+      tag         : project.ext.dockerTag,
+      appPort     : project.ext.appPort,
+      adminPort   : project.ext.adminPort,
+      configPath  : project.ext.k8sConfigPath,
+      configName  : "${k8sServiceName}-config",
+      registryId  : project.ext.k8sRegistry,
+      namespace   : namespace,
     ]
 
     TemplateEngine engine = new groovy.text.SimpleTemplateEngine()
