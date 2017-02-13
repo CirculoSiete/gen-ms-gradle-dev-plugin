@@ -295,7 +295,7 @@ class DevPlugin implements Plugin<Project> {
       if (project.hasProperty('k8sConfigLocation')) {
         project.ext.k8sConfigLocation = project.property('k8sConfigLocation')
       } else {
-        project.ext.k8sConfigLocation = project.ext.dockerBuildDir
+        project.ext.k8sConfigLocation = project.ext.dockerBuildDirString
       }
 
       from project.ext.k8sBuildDirString
