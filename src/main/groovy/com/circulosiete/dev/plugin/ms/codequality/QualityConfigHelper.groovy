@@ -33,7 +33,7 @@ class QualityConfigHelper {
     project.checkstyle {
       ignoreFailures = true
       showViolations = false
-      toolVersion = '7.4'
+      toolVersion = '7.5.1'
 
       configFile = "$buildDir/checkstyle.xml" as File
     }
@@ -65,7 +65,7 @@ class QualityConfigHelper {
     }
 
     project.jacoco {
-      toolVersion = '0.7.8'
+      toolVersion = '0.7.9'
     }
 
     project.tasks.withType(JacocoReport) { task ->
@@ -80,6 +80,7 @@ class QualityConfigHelper {
 
     project.jdepend {
       ignoreFailures = true
+      toolVersion = '1.10.1'
     }
 
     project.jdependMain {
@@ -102,7 +103,7 @@ class QualityConfigHelper {
       consoleOutput = project.ext.runningInJenkins
       ignoreFailures = true
       targetJdk = 1.7
-      toolVersion = '5.5.2'
+      toolVersion = '5.5.3'
     }
 
     project.pmdMain {
