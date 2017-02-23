@@ -301,6 +301,20 @@ class DevPlugin implements Plugin<Project> {
       from project.ext.k8sBuildDirString
       into "${project.ext.k8sConfigLocation}/${project.ext.k8sServiceName}"
     }
+
+    if (!project.ext.has('releaseBranch')) {
+      project.ext.releaseBranch = 'release'
+    }
+
+    println "El branch para release es: '${project.ext.releaseBranch}'"
+
+    def releaseExtension = project.extensions.getByName('release')
+    releaseExtension.git {
+      requireBranch = project.ext.releaseBranch
+    }
+
+    project.tasks.getByName('createReleaseTag').dependsOn('pushImage')
+
   }
 
   Closure checkRequiredPlugins = {
