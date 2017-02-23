@@ -310,7 +310,8 @@ class DevPlugin implements Plugin<Project> {
       'com.github.johnrengelman.shadow', 'maven',
       'com.bmuschko.docker-remote-api', 'jdepend',
       'pmd', 'checkstyle', 'findbugs', 'jacoco',
-      'org.sonarqube', 'com.github.ben-manes.versions'
+      'org.sonarqube', 'com.github.ben-manes.versions',
+      'net.researchgate.release'
     ].each {
       checkPlugin it
     }
