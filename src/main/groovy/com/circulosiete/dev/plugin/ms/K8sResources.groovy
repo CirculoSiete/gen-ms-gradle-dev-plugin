@@ -63,7 +63,14 @@ spec:
               port: ${adminPort}
             initialDelaySeconds: 180
             periodSeconds: 180
-            timeoutSeconds: 5
+            timeoutSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: ${adminPort}
+            initialDelaySeconds: 60
+            periodSeconds: 180
+            timeoutSeconds: 30
       volumes:
         - name: ${configName}
           hostPath:
