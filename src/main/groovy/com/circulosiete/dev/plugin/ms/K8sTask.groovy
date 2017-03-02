@@ -30,7 +30,7 @@ class K8sTask extends DefaultTask {
     project.logger.info('Generating Kubernetes config files.')
 
     if (!project.hasProperty('k8sReplicas')) {
-      project.ext.k8sReplicas = 2
+      project.ext.k8sReplicas = 1
     }
 
     if (!project.hasProperty('k8sMaxReplicas')) {

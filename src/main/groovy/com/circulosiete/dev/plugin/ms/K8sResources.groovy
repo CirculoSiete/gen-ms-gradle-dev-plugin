@@ -29,12 +29,10 @@ spec:
   replicas: ${replicas}
   selector:
     name: ${name}-rc
-    version: ${version}
   template:
     metadata:
       labels:
         name: ${name}-rc
-        version: ${version}
     spec:
       imagePullSecrets:
         - name: ${registryId ?: ''}
@@ -48,7 +46,7 @@ spec:
               cpu: "250m"
             limits:
               memory: "256Mi"
-              cpu: "500m"
+              cpu: "280m"
           volumeMounts:
             - mountPath: /config
               name: ${configName}
@@ -61,8 +59,8 @@ spec:
             httpGet:
               path: /healthcheck
               port: ${adminPort}
-            initialDelaySeconds: 180
-            periodSeconds: 180
+            initialDelaySeconds: 300
+            periodSeconds: 300
             timeoutSeconds: 15
           readinessProbe:
             httpGet:
@@ -112,6 +110,5 @@ spec:
       name: admin
   selector:
     name: ${name}-rc
-    version: ${version}
 '''
 }
