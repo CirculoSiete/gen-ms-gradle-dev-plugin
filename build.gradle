@@ -8,14 +8,13 @@ buildscript {
   dependencies {
     classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     //classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
-    
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'    
   }
 }
 
 plugins {
   id "com.github.hierynomus.license" version "0.11.0"
-  id 'net.researchgate.release' version '2.5.0'
+  id 'net.researchgate.release' version "2.6.0"
 }
 
 
@@ -46,7 +45,7 @@ dependencies {
   compile 'org.yaml:snakeyaml:1.18'
   compile "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1"
   compile 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
-  compile 'net.researchgate:gradle-release:2.5.0'
+  compile 'net.researchgate:gradle-release:2.6.0'
 }
 
 Date buildTimeAndDate = new Date()
