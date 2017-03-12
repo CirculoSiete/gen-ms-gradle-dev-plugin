@@ -33,7 +33,7 @@ repositories {
   jcenter()
   mavenCentral()
   maven {
-    url "http://dl.bintray.com/johnrengelman/gradle-plugins"
+    url 'http://dl.bintray.com/johnrengelman/gradle-plugins'
   }
 }
 
@@ -43,7 +43,7 @@ dependencies {
   compile 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
   compile 'com.bmuschko:gradle-docker-plugin:3.0.6'
   compile 'org.yaml:snakeyaml:1.18'
-  compile "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1"
+  compile 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1'
   compile 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
   compile 'net.researchgate:gradle-release:2.6.0'
 }
