@@ -56,7 +56,7 @@ ext {
 
 def jarManifestAttributes = [
   'Built-By'  : System.properties['user.name'],
-  'Created-By': System.properties['java.version'] + ' (' + System.properties['java.vendor'] + ' ' + System.getProperty("java.vm.version") + ")",
+  'Created-By': System.properties['java.version'] + ' (' + System.properties['java.vendor'] + ' ' + System.getProperty('java.vm.version') + ')',
   'Build-Date': buildDate,
   'Build-Time': buildTime]
 
@@ -191,7 +191,7 @@ bintray {
   }
 }
 
-javadoc.options.links("http://docs.oracle.com/javase/7/docs/api/", "http://docs.spring.io/spring/docs/4.2.x/javadoc-api/", "https://docs.oracle.com/javaee/5/api/")
+javadoc.options.links('http://docs.oracle.com/javase/7/docs/api/', 'http://docs.spring.io/spring/docs/4.2.x/javadoc-api/', 'https://docs.oracle.com/javaee/5/api/')
 
 classes.dependsOn licenseFormat
 jacocoTestReport.dependsOn check
