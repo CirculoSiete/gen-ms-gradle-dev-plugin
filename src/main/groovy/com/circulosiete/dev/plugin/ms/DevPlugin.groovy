@@ -118,7 +118,7 @@ class DevPlugin implements Plugin<Project> {
 
     Configuration config = project.configurations[DOCKER_JAVA_CONFIGURATION_NAME]
 
-    boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win")
+    boolean isWindows = System.getProperty('os.name').toLowerCase().contains('win')
     if (!isWindows) {
       config.resolutionStrategy {
         force 'de.gesellix:unix-socket-factory:2016-04-06T22-21-19'
