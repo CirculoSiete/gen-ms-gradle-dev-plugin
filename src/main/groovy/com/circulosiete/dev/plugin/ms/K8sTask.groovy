@@ -40,19 +40,19 @@ class K8sTask extends DefaultTask {
     if (project.hasProperty('k8sBaseConfigPath')) {
       project.ext.k8sBaseConfigPath1 = project.property('k8sBaseConfigPath')
     } else {
-      project.ext.k8sBaseConfigPath1 = "/config"
+      project.ext.k8sBaseConfigPath1 = '/config'
     }
 
     if (project.hasProperty('k8sRegistry')) {
       project.ext.k8sRegistry = project.property('k8sRegistry')
     } else {
-      project.ext.k8sRegistry = "registry"
+      project.ext.k8sRegistry = 'registry'
     }
 
     if (project.hasProperty('k8sNamespace')) {
       project.ext.k8sNamespace = project.property('k8sNamespace')
     } else {
-      project.ext.k8sNamespace = ""
+      project.ext.k8sNamespace = ''
     }
 
     def k8sServiceName = project.ext.k8sServiceName
