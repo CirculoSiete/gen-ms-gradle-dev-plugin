@@ -32,7 +32,7 @@ class FileCopyUtil {
       destinationFile.delete()
     }
     if (!destinationFile.createNewFile()) {
-      throw new IllegalStateException("unable to create fille $destination")
+      throw new IllegalStateException("unable to create file $destination")
     }
     def fileOutputStream = new FileOutputStream(destinationFile)
     try {
