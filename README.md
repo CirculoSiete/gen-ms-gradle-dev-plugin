@@ -1,4 +1,4 @@
-# gen-ms-gradle-dev-plugin
+# Plugin para desarrollo de servicios con Dropwizard
 
 Plugin de soporte de desarrollo de microservicios
 
