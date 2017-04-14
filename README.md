@@ -1,6 +1,6 @@
 # Plugin para desarrollo de servicios con Dropwizard
 
-Plugin de soporte de desarrollo de microservicios
+Plugin de soporte de desarrollo de Microservicios
 
 Este provee soporte para multiples plugins de Gradle
 
