@@ -170,7 +170,11 @@ class DevPlugin implements Plugin<Project> {
     }
 
     project.tasks.getByName('run').configure {
+      println it.dump()
+      //classpath = sourceSets.main.runtimeClasspath
       args 'server', DEFAULT_CONFIG_FILE
+      standardOutput = System.out
+      errorOutput = System.err
     }
 
     project.tasks.getByName('classes').dependsOn('setupMs')
