@@ -313,6 +313,9 @@ class DevPlugin implements Plugin<Project> {
     println "El branch para release es: '${project.ext.releaseBranch}'"
     println "Application port: ${project.ext.appPort}"
     println "Admin port: ${project.ext.adminPort}"
+    println ""
+    println "Navigate to: http://localhost:${project.ext.appPort}/"
+    println "Navigate to: http://localhost:${project.ext.adminPort}/"
 
     def releaseExtension = project.extensions.getByName('release')
     releaseExtension.git {
