@@ -203,7 +203,7 @@ class DevPlugin implements Plugin<Project> {
       if (project.hasProperty('drFromImage')) {
         project.ext.drFromImage = project.property('drFromImage')
       } else {
-        project.ext.drFromImage = 'openjdk:8u111-jre-alpine'
+        project.ext.drFromImage = 'openjdk:8u131-jre-alpine'
       }
 
       if (!project.ext.has('drMantainer')) {
@@ -219,7 +219,7 @@ class DevPlugin implements Plugin<Project> {
       }
 
       if (!project.ext.has('jvmMemory')) {
-        project.ext.jvmMemory = '128m'
+        project.ext.jvmMemory = '384m'
       }
 
       def theJvmMemory = project.ext.jvmMemory
