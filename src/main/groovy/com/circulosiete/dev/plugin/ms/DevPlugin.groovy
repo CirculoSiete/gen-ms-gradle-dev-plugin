@@ -203,7 +203,7 @@ class DevPlugin implements Plugin<Project> {
       if (project.hasProperty('drFromImage')) {
         project.ext.drFromImage = project.property('drFromImage')
       } else {
-        project.ext.drFromImage = 'openjdk:8u131-jre-alpine'
+        project.ext.drFromImage = 'openjdk:8u111-jre-alpine'
       }
 
       if (!project.ext.has('drMantainer')) {
