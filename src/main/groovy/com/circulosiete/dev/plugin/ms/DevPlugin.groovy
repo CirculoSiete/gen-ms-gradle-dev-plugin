@@ -170,7 +170,7 @@ class DevPlugin implements Plugin<Project> {
     }
 
     project.tasks.getByName('run').configure {
-      println it.dump()
+      //println it.dump()
       //classpath = sourceSets.main.runtimeClasspath
       args 'server', DEFAULT_CONFIG_FILE
       standardOutput = System.out
@@ -314,8 +314,8 @@ class DevPlugin implements Plugin<Project> {
     println "Application port: ${project.ext.appPort}"
     println "Admin port: ${project.ext.adminPort}"
     println ""
-    println "Navigate to: http://localhost:${project.ext.appPort}/"
-    println "Navigate to: http://localhost:${project.ext.adminPort}/"
+    println "Application:    http://localhost:${project.ext.appPort}/"
+    println "Administration: http://localhost:${project.ext.adminPort}/"
 
     def releaseExtension = project.extensions.getByName('release')
     releaseExtension.git {
