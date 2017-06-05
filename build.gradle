@@ -8,7 +8,7 @@ buildscript {
   dependencies {
     classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     //classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'    
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'    
   }
 }
 
@@ -41,10 +41,10 @@ dependencies {
   compile gradleApi()
   compile localGroovy()
   compile 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
-  compile 'com.bmuschko:gradle-docker-plugin:3.0.6'
+  compile 'com.bmuschko:gradle-docker-plugin:3.0.7'
   compile 'org.yaml:snakeyaml:1.18'
-  compile 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1'
-  compile 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
+  compile 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5'
+  compile 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
   compile 'net.researchgate:gradle-release:2.6.0'
 }
 
