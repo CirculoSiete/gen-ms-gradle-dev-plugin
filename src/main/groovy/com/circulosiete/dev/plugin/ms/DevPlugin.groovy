@@ -234,11 +234,12 @@ class DevPlugin implements Plugin<Project> {
 
       exposePort project.ext.appPort, project.ext.adminPort
 
-      copyFile project.ext.finalJarFilename, '/app/application.jar'
+      def theMicroserviceJar = "/app/${k8sServiceName}.jar"
+      copyFile project.ext.finalJarFilename, theMicroserviceJar
 
       volume extraVolumes
 
-      entryPoint 'java', "-Djava.awt.headless=true", "-DserviceName=${k8sServiceName}", "-Duser.timezone=${project.ext.jvmTimeZone}", "-Xms${theJvmMemory}", "-Xmx${theJvmMemory}", '-jar', '/app/application.jar', 'server', '/config/config.yaml'
+      entryPoint 'java', "-Djava.awt.headless=true", "-Duser.timezone=${project.ext.jvmTimeZone}", "-Xms${theJvmMemory}", "-Xmx${theJvmMemory}", '-jar', theMicroserviceJar, 'server', '/config/config.yaml'
 
     }
 
