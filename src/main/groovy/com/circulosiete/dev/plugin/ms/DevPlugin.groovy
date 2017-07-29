@@ -323,8 +323,12 @@ class DevPlugin implements Plugin<Project> {
       requireBranch = project.ext.releaseBranch
     }
 
-    project.tasks.getByName('createReleaseTag').dependsOn('pushImage')
-
+    if (asBoolean(project, 'msNotCreateTag')) {
+      println 'Se evita la creación del tag en el SCM.'
+    } else {
+      println 'Se creará el tag en el SCM.'
+      project.tasks.getByName('createReleaseTag').dependsOn('pushImage')
+    }
   }
 
   Closure checkRequiredPlugins = {
@@ -346,6 +350,18 @@ class DevPlugin implements Plugin<Project> {
       println "Applying plugin: $pluginName"
       plugins.apply(pluginName)
     }
+  }
+
+  Boolean asBoolean(Project project, String propertyName) {
+    if (project.hasProperty(propertyName)) {
+      try {
+        return Boolean.valueOf(project.property(propertyName))
+      } catch (Throwable t) {
+        println "La propiedad ${propertyName}, con valor '${}' se intenta usar como Boolean. Se retorna FALSE en lugar."
+        return false
+      }
+    }
+    false
   }
 
   void portApp(Project project) {
