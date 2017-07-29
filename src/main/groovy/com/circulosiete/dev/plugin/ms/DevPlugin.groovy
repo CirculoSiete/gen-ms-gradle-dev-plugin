@@ -307,11 +307,15 @@ class DevPlugin implements Plugin<Project> {
       into "${project.ext.k8sConfigLocation}/${project.ext.k8sServiceName}"
     }
 
-    if (!project.ext.has('releaseBranch')) {
-      project.ext.releaseBranch = 'release'
+    if (project.hasProperty('msReleaseBranch')) {
+      project.ext.msReleaseBranch = project.property('msReleaseBranch')
     }
 
-    println "El branch para release es: '${project.ext.releaseBranch}'"
+    if (!project.ext.has('msReleaseBranch')) {
+      project.ext.msReleaseBranch = 'release'
+    }
+
+    println "El branch para release es: '${project.ext.msReleaseBranch}'"
     println "Application port: ${project.ext.appPort}"
     println "Admin port: ${project.ext.adminPort}"
     println ""
@@ -320,7 +324,7 @@ class DevPlugin implements Plugin<Project> {
 
     def releaseExtension = project.extensions.getByName('release')
     releaseExtension.git {
-      requireBranch = project.ext.releaseBranch
+      requireBranch = project.ext.msReleaseBranch
     }
 
     if (asBoolean(project, 'msNotCreateTag')) {
