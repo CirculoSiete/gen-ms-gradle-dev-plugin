@@ -356,16 +356,16 @@ class DevPlugin implements Plugin<Project> {
     }
   }
 
-  Boolean asBoolean(Project project, String propertyName) {
+  Boolean asBoolean(Project project, String propertyName, Boolean defaultValue = false) {
     if (project.hasProperty(propertyName)) {
       try {
         return Boolean.valueOf(project.property(propertyName))
       } catch (Throwable t) {
-        println "La propiedad ${propertyName}, con valor '${}' se intenta usar como Boolean. Se retorna FALSE en lugar."
-        return false
+        println "ERROR: La propiedad ${propertyName}, con valor '${project.property(propertyName)}' se intenta usar como Boolean. Se retorna valor defaut: '${defaultValue}'."
+        return defaultValue
       }
     }
-    false
+    defaultValue
   }
 
   void portApp(Project project) {
