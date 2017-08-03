@@ -61,7 +61,7 @@ class ArtifactoryPromoteDockerImageTask extends DefaultTask {
     username = username ?: project.ext.registryUsername
     password = password ?: project.ext.registryPassword
     dockerRepository = dockerRepository ?: project.ext.dockerRepository
-    def url = "${contextUrl}api/docker/${sourceRepo}/v2/promote"
+    def url = "${contextUrl}/api/docker/${sourceRepo}/v2/promote"
 
     Objects.requireNonNull(sourceRepo, 'Es requerido el sourceRepo')
     Objects.requireNonNull(targetRepo, 'Es requerido el targetRepo')
