@@ -94,6 +94,7 @@ class DevPlugin implements Plugin<Project> {
         tagData << '/'
       }
 
+      project.ext.dockerRepository = "${project.ext.drHubProject}/${k8sServiceName}".toLowerCase()
       project.ext.dockerTag = "${tagData.join('')}${k8sServiceName}:${project.version}".toLowerCase()
 
     }

@@ -28,40 +28,63 @@ class ArtifactoryPromoteDockerImageTask extends DefaultTask {
     group = "Artifactory"
   }
 
+  @Input
+  def sourceRepo = null
 
   @Input
-  def sourceRepo
+  def targetRepo = null
 
   @Input
-  def targetRepo
+  def username = ''
 
   @Input
-  def username
+  def dockerRepository = ''
 
   @Input
-  def dockerRepository
+  def tag = ''
 
   @Input
-  def password
+  def password = ''
 
   @Input
-  def contextUrl
+  def contextUrl = ''
 
   @Input
   Boolean copy = true
 
   @TaskAction
   void promote() {
+    println "Promoviendo Docker Image..."
+
+    contextUrl = contextUrl ?: project.ext.registryUrl
+    tag = tag ?: project.version
+    username = username ?: project.ext.registryUsername
+    password = password ?: project.ext.registryPassword
+    dockerRepository = dockerRepository ?: project.ext.dockerRepository
     def url = "${contextUrl}api/docker/${sourceRepo}/v2/promote"
+
+    Objects.requireNonNull(sourceRepo, 'Es requerido el sourceRepo')
+    Objects.requireNonNull(targetRepo, 'Es requerido el targetRepo')
+
+    println "Usando: ${contextUrl}"
+    println "URL de promoción de Artifactory: ${url}"
+    println "Usuario: ${username}"
+    println "SourceRepo: ${sourceRepo}"
+    println "TargetRepo: ${targetRepo}"
+    println "DockerRepository: ${dockerRepository}"
+    println "Tag: ${tag}"
+    println "Copy: ${copy}"
+
     RESTClient client = new RESTClient(url)
     client.authorization = new HTTPBasicAuthorization(username, password)
 
     def result = client.post() {
-      json targetRepo: targetRepo, copy: copy, dockerRepository: dockerRepository
+      json targetRepo: targetRepo, copy: copy, dockerRepository: dockerRepository, tag: tag
     }
 
     println '=' * 80
     println result.response.contentAsString
     println '=' * 80
+
   }
 }
