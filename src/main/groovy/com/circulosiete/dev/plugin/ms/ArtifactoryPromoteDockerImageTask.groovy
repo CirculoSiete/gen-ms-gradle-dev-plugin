@@ -56,7 +56,7 @@ class ArtifactoryPromoteDockerImageTask extends DefaultTask {
   void promote() {
     println "Promoviendo Docker Image..."
 
-    contextUrl = contextUrl ?: project.ext.registryUrl
+    contextUrl = contextUrl ?: project.property('sunatPUrepo')
     tag = tag ?: project.version
     username = username ?: project.ext.registryUsername
     password = password ?: project.ext.registryPassword
