@@ -241,7 +241,7 @@ class DevPlugin implements Plugin<Project> {
 
       volume extraVolumes
 
-      entryPoint 'java', "-Djava.awt.headless=true", "-Duser.timezone=${project.ext.jvmTimeZone}", "-Xms${theJvmMemory}", "-Xmx${theJvmMemory}", '-jar', theMicroserviceJar, 'server', '/config/config.yaml'
+      entryPoint 'java', "-Djava.awt.headless=true", "-Duser.timezone=${project.ext.jvmTimeZone}", "-Xms${theJvmMemory}", "-Xmx${theJvmMemory}", "-XX:ParalllelGCThreads=2", "-XX:CICompilerCount=2", '-jar', theMicroserviceJar, 'server', '/config/config.yaml'
 
     }
 
